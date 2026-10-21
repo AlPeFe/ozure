@@ -1,0 +1,21 @@
+{
+  "slug": "classic-chrome-city",
+  "name": "Classic Chrome City",
+  "author": "Ozure samples",
+  "notes": "Neutral daylight walk-around look: muted blues, gentle contrast. Straight out of camera, no grading.",
+  "tags": ["color", "street", "daylight"],
+  "recipe": {
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr200",
+    "grain_effect": "weak_small",
+    "color_chrome": "weak",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": { "mode": "daylight", "shift_r": 2, "shift_b": -3 },
+    "highlight": -1.0,
+    "shadow": 1.0,
+    "color": -1.0,
+    "sharpness": -1.0,
+    "noise_reduction": -2,
+    "clarity": 0.0
+  }
+}

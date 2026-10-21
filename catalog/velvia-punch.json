@@ -1,0 +1,21 @@
+{
+  "slug": "velvia-punch",
+  "name": "Velvia Punch",
+  "author": "Ozure samples",
+  "notes": "Landscape saturation done on purpose. Keep highlights in check.",
+  "tags": ["color", "landscape", "saturated"],
+  "recipe": {
+    "film_simulation": "velvia",
+    "dynamic_range": "dr100",
+    "grain_effect": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": { "mode": "daylight", "shift_r": 0, "shift_b": 0 },
+    "highlight": -1.0,
+    "shadow": 0.0,
+    "color": 2.0,
+    "sharpness": 1.0,
+    "noise_reduction": -2,
+    "clarity": 1.0
+  }
+}

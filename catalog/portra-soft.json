@@ -1,0 +1,21 @@
+{
+  "slug": "portra-soft",
+  "name": "Portra Soft",
+  "author": "Ozure samples",
+  "notes": "Warm skin tones with a gentle contrast curve; shift white balance toward amber.",
+  "tags": ["color", "portrait", "warm"],
+  "recipe": {
+    "film_simulation": "pro_neg_hi",
+    "dynamic_range": "dr200",
+    "grain_effect": "weak_small",
+    "smooth_skin": "strong",
+    "color_chrome": "off",
+    "white_balance": { "mode": "auto", "shift_r": 3, "shift_b": -4 },
+    "highlight": -0.5,
+    "shadow": 0.5,
+    "color": -1.0,
+    "sharpness": -2.0,
+    "noise_reduction": 0,
+    "clarity": -1.0
+  }
+}

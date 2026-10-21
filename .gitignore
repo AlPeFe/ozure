@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# State and generated artefacts kept out of git
+.ozure/
+mock-camera.json
+
+# Brand build cache (downloaded/instanced fonts)
+.build/

@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ozure"
+version = "0.2.0"
+description = "Read, edit and install Fujifilm custom recipes over USB PTP"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Alex Pérez Fernández" }]
+keywords = ["fujifilm", "ptp", "recipes", "camera", "agent-skill"]
+classifiers = [
+  "Environment :: Console",
+  "Programming Language :: Python :: 3",
+  "Topic :: Multimedia :: Graphics :: Capture :: Digital Camera",
+]
+dependencies = []
+
+[project.optional-dependencies]
+usb = ["pyusb>=1.2"]
+
+[project.scripts]
+ozure = "ozure.cli:main"
+
+[tool.setuptools]
+packages = ["ozure"]
+
+[tool.setuptools.package-data]
+ozure = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+ignore = [
+  "E501",   # long lines in the embedded format documentation
+  "RUF001", # the docs deliberately use typographic punctuation
+  "RUF002",
+  "RUF003",
+]

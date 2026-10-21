@@ -1,0 +1,20 @@
+{
+  "slug": "eterna-cinema",
+  "name": "Eterna Cinema",
+  "author": "Ozure samples",
+  "notes": "Flat, filmic response with soft highlights — the one to grade later or use for video stills.",
+  "tags": ["color", "cinema", "flat"],
+  "recipe": {
+    "film_simulation": "eterna",
+    "dynamic_range": "dr400",
+    "grain_effect": "weak_large",
+    "color_chrome": "weak",
+    "white_balance": { "mode": "color_temperature", "shift_r": 0, "shift_b": 0, "color_temperature": 5200 },
+    "highlight": -2.0,
+    "shadow": 2.0,
+    "color": -2.0,
+    "sharpness": -2.0,
+    "noise_reduction": -4,
+    "clarity": -2.0
+  }
+}

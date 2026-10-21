@@ -1,0 +1,21 @@
+{
+  "slug": "acros-night",
+  "name": "Acros Night",
+  "author": "Ozure samples",
+  "notes": "High-contrast monochrome for low light; red filter darkens skies and pushes highlights.",
+  "tags": ["monochrome", "night", "high-contrast"],
+  "recipe": {
+    "film_simulation": "acros_r",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_small",
+    "smooth_skin": "weak",
+    "white_balance": { "mode": "auto", "shift_r": 0, "shift_b": 0 },
+    "highlight": 1.0,
+    "shadow": 2.0,
+    "sharpness": 1.0,
+    "noise_reduction": -4,
+    "clarity": 1.0,
+    "monochrome_wc": 0.0,
+    "monochrome_mg": 0.0
+  }
+}
