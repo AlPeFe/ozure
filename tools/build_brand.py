@@ -1,17 +1,21 @@
-"""Build the ozure brand: a cute camera illustration with the name under it.
+"""Build the ozure brand: a yuru-kyara axolotl with the name under it.
 
-One geometry description, two renderers: the same shapes produce
-`assets/logo.svg` and `assets/logo.png`, so the vector and the raster can never
-drift apart. Two dialects of the same drawing exist:
+The mascot is the logo. It is deliberately soft and a bit lopsided — a
+yuru-kyara, not a corporate icon — with three frills per side, one eye a touch
+lower than the other and a sprout on top.
 
-* logo   — pink camera + the wordmark, on a soft blush halo (README / social)
-* icon   — cream camera on a pink tile (avatar): no name, reads at 32 px
-* wordmark — just the name, for tight spaces like the demo title bar
+One geometry description, two renderers (SVG + Pillow), transparent background
+everywhere so it can sit on any page:
+
+* logo           — mascot + wordmark, for light backgrounds
+* logo-dark      — same, name in cream, for dark backgrounds
+* icon           — the mascot alone, filling a square (avatar)
+* wordmark       — just the name, for tight spaces such as the demo title bar
 
     python tools/build_brand.py
 
-The script downloads Quicksand (SIL OFL) into .build/ on first run and instances
-the weight it needs; only the generated SVG/PNGs are committed.
+Quicksand (SIL OFL) is downloaded into .build/ and instanced on first run; only
+the generated SVG/PNGs are committed.
 """
 
 from __future__ import annotations
@@ -45,10 +49,9 @@ CREAM = "#fff9f7"
 INK = "#2c2f38"
 WHITE = "#ffffff"
 
-# Canvas shared by every lockup piece (SVG units = px at 1x).
-WIDTH, HEIGHT = 512, 578
+WIDTH, HEIGHT = 512, 566
 NAME_SIZE = 74
-NAME_BASELINE = 540
+NAME_BASELINE = 536
 
 Shape = dict[str, Any]
 
@@ -56,6 +59,186 @@ Shape = dict[str, Any]
 def rgb(hex_colour: str) -> tuple[int, int, int, int]:
     value = hex_colour.lstrip("#")
     return (*[int(value[index : index + 2], 16) for index in (0, 2, 4)], 255)
+
+
+# --------------------------------------------------------------------------
+# Shape builders
+# --------------------------------------------------------------------------
+
+
+def blob(
+    cx: float,
+    cy: float,
+    rx: float,
+    ry: float,
+    rotation: float = 0.0,
+    wobble: float = 0.0,
+    phase: float = 0.0,
+    count: int = 96,
+) -> list[tuple[float, float]]:
+    """A soft, slightly irregular ellipse: the yuru-kyara building block."""
+    points = []
+    for index in range(count):
+        t = 2 * math.pi * index / count
+        radius = (
+            1 + wobble * math.sin(3 * t + phase) + wobble * 0.45 * math.sin(5 * t + phase * 1.7)
+        )
+        x = rx * radius * math.cos(t)
+        y = ry * radius * math.sin(t)
+        cos_r, sin_r = math.cos(rotation), math.sin(rotation)
+        points.append((cx + x * cos_r - y * sin_r, cy + x * sin_r + y * cos_r))
+    return points
+
+
+def star(cx: float, cy: float, radius: float) -> list[tuple[float, float]]:
+    """Four-point sparkle, the kawaii kind."""
+    points = []
+    for index in range(8):
+        angle = math.radians(index * 45 - 90)
+        span = radius if index % 2 == 0 else radius * 0.3
+        points.append((cx + span * math.cos(angle), cy + span * math.sin(angle)))
+    return points
+
+
+def mascot_shapes(
+    *,
+    body: str = PETAL,
+    body_shade: str = PETAL_DEEP,
+    gill: str = PETAL_DEEP,
+    belly: str = CREAM,
+    face: str = INK,
+    cheek: str = PETAL_DEEP,
+    sparkle: str = PETAL_DEEP,
+    with_sparkles: bool = True,
+) -> list[Shape]:
+    """The axolotl: frills behind, egg body, one lopsided eye, sprout."""
+    shapes: list[Shape] = []
+
+    # frills, three each side, tucked behind the head
+    for side in (-1, 1):
+        for gx, gy, rx, ry, rotation in (
+            (150, 196, 44, 21, -0.55),
+            (134, 246, 48, 22, -0.12),
+            (150, 296, 42, 20, 0.32),
+        ):
+            cx = 256 + side * (gx - 256)
+            shapes.append(
+                {
+                    "type": "polygon",
+                    "points": blob(cx, gy, rx, ry, rotation * side, 0.05, 0.8),
+                    "fill": gill,
+                }
+            )
+
+    # body: a shade behind, the body on top, so the edge stays soft
+    shapes.append(
+        {
+            "type": "polygon",
+            "points": blob(256, 302, 132, 130, -0.05, 0.035, 1.1),
+            "fill": body_shade,
+        }
+    )
+    shapes.append(
+        {"type": "polygon", "points": blob(256, 296, 132, 130, -0.05, 0.035, 1.1), "fill": body}
+    )
+    # belly
+    shapes.append(
+        {"type": "polygon", "points": blob(256, 344, 62, 46, 0.0, 0.03, 0.4), "fill": belly}
+    )
+
+    # sprout on top
+    shapes.append(
+        {
+            "type": "curve",
+            "points": [(250, 170), (238, 130), (272, 118)],
+            "stroke": body_shade,
+            "width": 9,
+        }
+    )
+
+    # face: the right eye sits a couple of units higher — that is the whole joke
+    shapes.append({"type": "circle", "c": (220, 266), "r": 11, "fill": face})
+    shapes.append({"type": "circle", "c": (294, 260), "r": 11, "fill": face})
+    shapes.append({"type": "circle", "c": (196, 292), "r": 14, "fill": cheek})
+    shapes.append({"type": "circle", "c": (318, 288), "r": 13, "fill": cheek})
+    shapes.append(
+        {
+            "type": "curve",
+            "points": [(238, 300), (257, 316), (276, 298)],
+            "stroke": face,
+            "width": 7,
+        }
+    )
+
+    if with_sparkles:
+        shapes.append({"type": "polygon", "points": star(414, 186, 16), "fill": sparkle})
+        shapes.append({"type": "polygon", "points": star(444, 240, 9), "fill": sparkle})
+    return shapes
+
+
+def shift_shapes(shapes: list[Shape], *, dx: float = 0.0, dy: float = 0.0) -> list[Shape]:
+    moved = []
+    for shape in shapes:
+        clone = dict(shape)
+        if clone["type"] == "circle":
+            cx, cy = clone["c"]
+            clone["c"] = (cx + dx, cy + dy)
+        elif clone["type"] == "rrect":
+            x0, y0, x1, y1 = clone["box"]
+            clone["box"] = (x0 + dx, y0 + dy, x1 + dx, y1 + dy)
+        else:
+            clone["points"] = [(x + dx, y + dy) for x, y in clone["points"]]
+        moved.append(clone)
+    return moved
+
+
+def shape_points(shape: Shape) -> list[tuple[float, float]]:
+    if shape["type"] == "circle":
+        cx, cy = shape["c"]
+        r = shape["r"]
+        return [(cx - r, cy - r), (cx + r, cy + r)]
+    if shape["type"] == "rrect":
+        x0, y0, x1, y1 = shape["box"]
+        return [(x0, y0), (x1, y1)]
+    return list(shape["points"])
+
+
+def bounds_of(shapes: list[Shape]) -> tuple[float, float, float, float]:
+    points = [point for shape in shapes for point in shape_points(shape)]
+    xs = [point[0] for point in points]
+    ys = [point[1] for point in points]
+    return min(xs), min(ys), max(xs), max(ys)
+
+
+def fit_shapes(shapes: list[Shape], size: float, padding: float = 0.05) -> list[Shape]:
+    """Scale and centre the drawing inside a square of `size` units."""
+    x0, y0, x1, y1 = bounds_of(shapes)
+    span = max(x1 - x0, y1 - y0)
+    target = size * (1 - 2 * padding)
+    factor = target / span
+    dx = (size - (x1 - x0) * factor) / 2 - x0 * factor
+    dy = (size - (y1 - y0) * factor) / 2 - y0 * factor
+    scaled = []
+    for shape in shapes:
+        clone = dict(shape)
+        if clone["type"] == "circle":
+            clone["c"] = (clone["c"][0] * factor + dx, clone["c"][1] * factor + dy)
+            clone["r"] = clone["r"] * factor
+        elif clone["type"] == "rrect":
+            x0_, y0_, x1_, y1_ = clone["box"]
+            clone["box"] = (
+                x0_ * factor + dx,
+                y0_ * factor + dy,
+                x1_ * factor + dx,
+                y1_ * factor + dy,
+            )
+            clone["r"] = clone["r"] * factor
+        else:
+            clone["points"] = [(x * factor + dx, y * factor + dy) for x, y in clone["points"]]
+            if clone["type"] == "curve":
+                clone["width"] = clone["width"] * factor
+        scaled.append(clone)
+    return scaled
 
 
 # --------------------------------------------------------------------------
@@ -112,75 +295,28 @@ def word_width(font: TTFont, scale: float, text: str = WORD) -> float:
 
 
 # --------------------------------------------------------------------------
-# Drawing primitives (shared model)
+# Renderers
 # --------------------------------------------------------------------------
-
-
-def star(cx: float, cy: float, radius: float) -> list[tuple[float, float]]:
-    """Four-point sparkle, the kawaii kind."""
-    points = []
-    for index in range(8):
-        angle = math.radians(index * 45 - 90)
-        span = radius if index % 2 == 0 else radius * 0.32
-        points.append((cx + span * math.cos(angle), cy + span * math.sin(angle)))
-    return points
-
-
-def camera_shapes(
-    *,
-    body: str,
-    plate: str,
-    lens_ring: str,
-    lens_inner: str,
-    face: str,
-    cheek: str,
-    highlight: str,
-    sparkle: str,
-) -> list[Shape]:
-    """A cute camera: pink body, big lens, smiley face, sparkle."""
-    return [
-        # soft halo so the drawing sits on the page instead of floating
-        {"type": "circle", "c": (256, 246), "r": 196, "fill": BLUSH},
-        {"type": "rrect", "box": (96, 120, 416, 392), "r": 58, "fill": body},
-        {"type": "rrect", "box": (190, 84, 322, 132), "r": 20, "fill": plate},
-        {"type": "rrect", "box": (338, 96, 382, 114), "r": 9, "fill": plate},
-        {"type": "circle", "c": (206, 262), "r": 68, "fill": lens_ring},
-        {"type": "circle", "c": (206, 262), "r": 50, "fill": lens_inner},
-        {"type": "circle", "c": (228, 238), "r": 12, "fill": highlight},
-        {"type": "circle", "c": (298, 244), "r": 9, "fill": face},
-        {"type": "circle", "c": (346, 244), "r": 9, "fill": face},
-        {
-            "type": "curve",
-            "points": [(300, 268), (322, 292), (344, 268)],
-            "stroke": face,
-            "width": 7,
-        },
-        {"type": "circle", "c": (288, 300), "r": 11, "fill": cheek},
-        {"type": "circle", "c": (366, 300), "r": 11, "fill": cheek},
-        # Sparkles sit outside the body, so they take their own colour.
-        {"type": "polygon", "points": star(448, 140, 15), "fill": sparkle},
-        {"type": "polygon", "points": star(470, 196, 9), "fill": sparkle},
-    ]
 
 
 def svg_shape(shape: Shape) -> str:
     if shape["type"] == "rrect":
         x0, y0, x1, y1 = shape["box"]
         return (
-            f'<rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}" '
-            f'rx="{shape["r"]}" fill="{shape["fill"]}"/>'
+            f'<rect x="{x0:.2f}" y="{y0:.2f}" width="{x1 - x0:.2f}" height="{y1 - y0:.2f}" '
+            f'rx="{shape["r"]:.2f}" fill="{shape["fill"]}"/>'
         )
     if shape["type"] == "circle":
         cx, cy = shape["c"]
-        return f'<circle cx="{cx}" cy="{cy}" r="{shape["r"]}" fill="{shape["fill"]}"/>'
+        return f'<circle cx="{cx:.2f}" cy="{cy:.2f}" r="{shape["r"]:.2f}" fill="{shape["fill"]}"/>'
     if shape["type"] == "polygon":
-        points = " ".join(f"{x:.1f},{y:.1f}" for x, y in shape["points"])
+        points = " ".join(f"{x:.2f},{y:.2f}" for x, y in shape["points"])
         return f'<polygon points="{points}" fill="{shape["fill"]}"/>'
     if shape["type"] == "curve":
         (x0, y0), (cx, cy), (x1, y1) = shape["points"]
         return (
-            f'<path d="M {x0} {y0} Q {cx} {cy} {x1} {y1}" fill="none" '
-            f'stroke="{shape["stroke"]}" stroke-width="{shape["width"]}" '
+            f'<path d="M {x0:.2f} {y0:.2f} Q {cx:.2f} {cy:.2f} {x1:.2f} {y1:.2f}" '
+            f'fill="none" stroke="{shape["stroke"]}" stroke-width="{shape["width"]:.2f}" '
             'stroke-linecap="round"/>'
         )
     raise ValueError(shape["type"])
@@ -226,37 +362,28 @@ def draw_shape(draw: ImageDraw.ImageDraw, shape: Shape, scale: float) -> None:
         raise ValueError(shape["type"])
 
 
-# --------------------------------------------------------------------------
-# Documents
-# --------------------------------------------------------------------------
-
-
-def lockup_svg(shapes: list[Shape], glyphs: list[dict]) -> str:
+def lockup_svg(shapes: list[Shape], glyphs: list[dict], name_colour: str) -> str:
     body = "\n".join(f"  {svg_shape(shape)}" for shape in shapes)
     letters = "\n".join(
-        f'  <path fill="{PETAL if glyph["char"] == "o" else INK}" d="{glyph["path"]}"/>'
+        f'  <path fill="{PETAL if glyph["char"] == "o" else name_colour}" d="{glyph["path"]}"/>'
         for glyph in glyphs
     )
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {WIDTH} {HEIGHT}" width="{WIDTH}" height="{HEIGHT}" role="img" aria-label="ozure">
   <title>ozure</title>
-  <desc>A cute pastel camera, with the name ozure underneath.</desc>
-  <rect width="{WIDTH}" height="{HEIGHT}" fill="{CREAM}"/>
+  <desc>A yuru-kyara axolotl, with the name ozure underneath.</desc>
 {body}
 {letters}
 </svg>
 '''
 
 
-def render_svg_shapes(shapes: list[Shape], width: int, height: int) -> str:
-    body = "\n".join(f"  {svg_shape(shape)}" for shape in shapes)
-    return body, width, height
-
-
-def lockup_png(shapes: list[Shape], glyphs: list[dict], size: int = 900) -> Image.Image:
+def lockup_png(
+    shapes: list[Shape], glyphs: list[dict], name_colour: str, size: int = 900
+) -> Image.Image:
     scale = size / WIDTH
     supersample = 2
     height = round(HEIGHT * scale)
-    image = Image.new("RGBA", (size * supersample, height * supersample), rgb(CREAM))
+    image = Image.new("RGBA", (size * supersample, height * supersample), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
     for shape in shapes:
         draw_shape(draw, shape, scale * supersample)
@@ -266,38 +393,17 @@ def lockup_png(shapes: list[Shape], glyphs: list[dict], size: int = 900) -> Imag
             (glyph["origin"] * scale * supersample, NAME_BASELINE * scale * supersample),
             glyph["char"],
             font=font,
-            fill=rgb(PETAL if glyph["char"] == "o" else INK),
+            fill=rgb(PETAL if glyph["char"] == "o" else name_colour),
             anchor="ls",
         )
     return image.resize((size, height), Image.LANCZOS)
 
 
-def icon_shapes() -> list[Shape]:
-    """Cream camera on a pink tile, no name: reads at avatar sizes."""
-    shapes = camera_shapes(
-        body=CREAM,
-        plate=BLUSH,
-        lens_ring=PETAL,
-        lens_inner=BLUSH,
-        face=INK,
-        cheek=PETAL,
-        highlight=WHITE,
-        sparkle=CREAM,
-    )
-    # Drop the halo (the tile is the background) and re-centre the drawing.
-    return [shape for shape in shapes if not (shape["type"] == "circle" and shape.get("r") == 196)]
-
-
 def icon_svg(shapes: list[Shape], size: int = 512) -> str:
-    scale = size / WIDTH
-    offset_y = -(84 + 392) / 2 * scale + size / 2
     body = "\n".join(f"  {svg_shape(shape)}" for shape in shapes)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}" width="{size}" height="{size}" role="img" aria-label="ozure">
   <title>ozure</title>
-  <rect width="{size}" height="{size}" rx="{round(size * 0.225)}" fill="{PETAL}"/>
-  <g transform="translate({(size - WIDTH * scale) / 2:.2f} {offset_y:.2f}) scale({scale:.4f})">
 {body}
-  </g>
 </svg>
 '''
 
@@ -305,25 +411,11 @@ def icon_svg(shapes: list[Shape], size: int = 512) -> str:
 def icon_png(shapes: list[Shape], size: int = 1024) -> Image.Image:
     supersample = 2
     tile = size * supersample
-    scale = tile / WIDTH
-    offset_y = -(84 + 392) / 2 * scale + tile / 2
     image = Image.new("RGBA", (tile, tile), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
-    draw.rounded_rectangle([0, 0, tile - 1, tile - 1], radius=round(tile * 0.225), fill=rgb(PETAL))
-    shifted = []
+    # `shapes` are already laid out in the 512-unit icon canvas.
     for shape in shapes:
-        clone = dict(shape)
-        if clone["type"] == "circle":
-            cx, cy = clone["c"]
-            clone["c"] = (cx, cy + offset_y / scale)
-        elif clone["type"] == "rrect":
-            x0, y0, x1, y1 = clone["box"]
-            clone["box"] = (x0, y0 + offset_y / scale, x1, y1 + offset_y / scale)
-        elif clone["type"] == "polygon" or clone["type"] == "curve":
-            clone["points"] = [(x, y + offset_y / scale) for x, y in clone["points"]]
-        shifted.append(clone)
-    for shape in shifted:
-        draw_shape(draw, shape, scale)
+        draw_shape(draw, shape, tile / 512)
     return image.resize((size, size), Image.LANCZOS)
 
 
@@ -357,30 +449,24 @@ def wordmark_png(glyphs: list[dict], width: float, height: float, scale: int = 4
 def main() -> None:
     ASSETS.mkdir(exist_ok=True)
     font = TTFont(font_path())
+    units = font["head"].unitsPerEm
 
-    scale = NAME_SIZE / font["head"].unitsPerEm
+    scale = NAME_SIZE / units
     total = word_width(font, scale)
     glyphs = glyph_run(WORD, font, scale=scale, baseline=NAME_BASELINE, left=(WIDTH - total) / 2)
 
-    logo_shapes = camera_shapes(
-        body=PETAL,
-        plate=PETAL_DEEP,
-        lens_ring=CREAM,
-        lens_inner=BLUSH,
-        face=INK,
-        cheek=PETAL_DEEP,
-        highlight=CREAM,
-        sparkle=PETAL_DEEP,
-    )
-    (ASSETS / "logo.svg").write_text(lockup_svg(logo_shapes, glyphs), encoding="utf-8")
-    lockup_png(logo_shapes, glyphs).save(ASSETS / "logo.png")
+    shapes = mascot_shapes()
+    (ASSETS / "logo.svg").write_text(lockup_svg(shapes, glyphs, INK), encoding="utf-8")
+    lockup_png(shapes, glyphs, INK).save(ASSETS / "logo.png")
+    (ASSETS / "logo-dark.svg").write_text(lockup_svg(shapes, glyphs, CREAM), encoding="utf-8")
+    lockup_png(shapes, glyphs, CREAM).save(ASSETS / "logo-dark.png")
 
-    icon = icon_shapes()
+    # The avatar is the mascot alone: sparkles would push it off centre.
+    icon = fit_shapes(mascot_shapes(with_sparkles=False), 512, padding=0.075)
     (ASSETS / "icon.svg").write_text(icon_svg(icon), encoding="utf-8")
     icon_png(icon).save(ASSETS / "icon.png")
 
-    # Wordmark only: tight spaces (demo title bar, favicons, docs headers).
-    small_scale = 100 / font["head"].unitsPerEm
+    small_scale = 100 / units
     small_width = word_width(font, small_scale)
     small_glyphs = glyph_run(WORD, font, scale=small_scale, baseline=96, left=6)
     (ASSETS / "wordmark.svg").write_text(
@@ -399,7 +485,7 @@ def main() -> None:
         f"| highlight | `{WHITE}` |\n",
         encoding="utf-8",
     )
-    print("wrote assets/logo.{svg,png}, icon.{svg,png}, wordmark.{svg,png}, palette.md")
+    print("wrote assets/logo{,-dark}.{svg,png}, icon.{svg,png}, wordmark.{svg,png}, palette.md")
 
 
 if __name__ == "__main__":

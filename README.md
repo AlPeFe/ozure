@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="assets/logo.png" alt="ozure — a cute camera and the name" width="280">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.png">
+    <img src="assets/logo.png" alt="ozure — a derpy pastel axolotl and the name" width="270">
+  </picture>
 </p>
 
 <p align="center">
@@ -83,15 +86,16 @@ folder into your skills directory (`~/.claude/skills/`, `~/.pi/skills/`,
 
 ## Brand
 
-A cute pastel camera, with the name underneath in a smaller size. The *o* of
-**ozure** is the lens colour, so the drawing and the name share one hue. Every
-asset comes from a single geometry description (`tools/build_brand.py`), which
-emits both SVG and PNG — they cannot drift apart:
+A yuru-kyara axolotl: soft, slightly lopsided, three frills per side, one eye a
+touch lower than the other. The name sits underneath, smaller, with the *o* in
+the same pink as the mascot. Everything is **transparent** — no baked-in
+background — so it drops onto any theme:
 
 | file | use |
 | --- | --- |
-| `assets/logo.svg` / `.png` | the lockup: camera + name (README, social) |
-| `assets/icon.svg` / `.png` | avatar: cream camera on a pink tile |
+| `assets/logo.svg` / `.png` | the lockup: mascot + name (light backgrounds) |
+| `assets/logo-dark.svg` / `.png` | same, name in cream (dark backgrounds) |
+| `assets/icon.svg` / `.png` | the mascot alone, filling a square (avatar) |
 | `assets/wordmark.svg` / `.png` | the name alone (demo title bar, tight spots) |
 
 ```bash
