@@ -50,8 +50,8 @@ LOGO = ROOT / "assets" / "wordmark.png"
 
 STEPS = [
     "connect",
-    "list",
-    "catalog list -q acros",
+    "catalogs",
+    "catalog list --catalog fxw -q kodak",
     "apply acros-night --slot C6",
     "apply acros-night --slot C6 --yes",
     "list",

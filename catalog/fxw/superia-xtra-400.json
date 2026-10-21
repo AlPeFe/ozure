@@ -1,0 +1,33 @@
+{
+  "slug": "superia-xtra-400",
+  "name": "Superia Xtra 400",
+  "source": "https://fujixweekly.com/2022/12/09/superia-xtra-400-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Negative · Grain Effect: Strong, Small · Color Chrome Effect: Off · Color Chrome FX Blue: Weak · White Balance: Auto, +3 Red & -5 Blue · Dynamic Range: DR400 · Highlight: 0 · Shadow: -1 · Color: +4 · Sharpness: -1 · High ISO NR: -4 · Clarity: -2 · ISO: Auto, up to ISO 6400 · Exposure Compensation: 0 to +1 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Superia Xtra 400",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 3,
+      "shift_b": -5
+    },
+    "highlight": 0,
+    "shadow": -1,
+    "color": 4,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "slug": "reggies-superia",
+  "name": "Reggie's Superia",
+  "source": "https://fujixweekly.com/2026/03/12/reggies-superia-a-fujifilm-recipe-for-x-trans-iv-v-cameras/",
+  "notes": "Film Simulation: Classic Negative · Dynamic Range: DR-Auto · Grain Effect: Strong, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Strong · White Balance: Auto, +2 Red & -3 Blue · Highlight: -2 · Shadow: +2 · Color: +4 · Sharpness: -2 · High ISO NR: -4 · Clarity: 0",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "Reggie's Superia",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr100",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 2,
+      "shift_b": -3
+    },
+    "highlight": -2,
+    "shadow": 2,
+    "color": 4,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

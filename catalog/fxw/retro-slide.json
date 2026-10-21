@@ -1,0 +1,34 @@
+{
+  "slug": "retro-slide",
+  "name": "Retro Slide",
+  "source": "https://fujixweekly.com/2026/08/10/retro-slide-a-fujifilm-recipe-for-5th-gen-x-trans-v-cameras/",
+  "notes": "Film Simulation: Nostalgic Neg · Grain Effect: Weak, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Weak · White Balance: 5000K, -1 Red & +3 Blue · Dynamic Range: DR400 · Highlight: 0 · Shadow: +2 · Color: +4 · Sharpness: -1 · High ISO NR: -4 · Clarity: +2 · ISO: Auto, up to ISO 6400 · Exposure Compensation: +2/3 to +1 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Retro Slide",
+    "film_simulation": "nostalgic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": -1,
+      "shift_b": 3,
+      "color_temperature": 5000
+    },
+    "highlight": 0,
+    "shadow": 2,
+    "color": 4,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": 2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

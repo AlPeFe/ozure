@@ -11,7 +11,12 @@ import unittest
 from pathlib import Path
 
 from ozure import cli
-from ozure.catalog import load_catalog, repo_catalog_dir
+from ozure.catalog import (
+    available_catalogs,
+    load_all_catalogs,
+    load_catalog,
+    repo_catalog_dir,
+)
 from ozure.errors import InvalidRecipe, ProtocolError
 from ozure.fuji import FujiPtp
 from ozure.mockcam import MockCameraTransport, props_from_recipe, state_from_recipes
@@ -225,13 +230,29 @@ class RecipeFieldTests(unittest.TestCase):
 
 
 class CatalogTests(unittest.TestCase):
-    def test_bundled_catalog_loads_and_validates(self):
-        catalog = load_catalog(repo_catalog_dir())
-        self.assertGreaterEqual(len(catalog), 5)
-        for entry in catalog:
+    def test_every_visible_catalog_loads_and_validates(self):
+        catalogs = available_catalogs()
+        self.assertGreaterEqual(len(catalogs), 2)
+        merged = load_all_catalogs()
+        self.assertGreaterEqual(len(merged), 100)
+        for entry in merged:
             self.assertTrue(entry.slug)
             self.assertTrue(entry.name)
+            self.assertTrue(entry.catalog)
             entry.recipe.validate()
+
+    def test_bundled_collections_are_separate_catalogs(self):
+        names = {info.name for info in available_catalogs()}
+        self.assertIn("samples", names)
+        self.assertIn("fxw", names)
+        fxw = load_catalog(repo_catalog_dir() / "fxw")
+        self.assertGreaterEqual(len(fxw), 50)
+        self.assertTrue(all(entry.recipe.film_simulation for entry in fxw))
+
+    def test_catalog_metadata_is_read(self):
+        info = next(info for info in available_catalogs() if info.name == "fxw")
+        self.assertIn("Fuji", info.title)
+        self.assertTrue(info.source.startswith("https://"))
 
     def test_bad_catalog_file_fails_loudly(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -364,6 +385,7 @@ class CliTests(unittest.TestCase):
         cli.main(["connect", "--mock", "--json"])
         import json as _json
 
+        before = _json.loads((self.home / "mock-camera.json").read_text(encoding="utf-8"))
         backup = self.home / "bk.json"
         backup.write_text(
             _json.dumps({"slots": {"C1": {"name": "Restored"}, "C7": {"name": "", "empty": True}}}),
@@ -373,10 +395,80 @@ class CliTests(unittest.TestCase):
         self.assertEqual(code, 0)
         state = _json.loads((self.home / "mock-camera.json").read_text(encoding="utf-8"))
         self.assertEqual(state["slots"][0]["name"], "Restored")
-        # C7 was recorded as empty in the backup, so it must be left alone
-        # instead of being filled with defaults.
-        self.assertNotEqual(state["slots"][6]["name"], "")
-        self.assertNotEqual(state["slots"][6]["props"][0], 0xFFFF)
+        # C7 was recorded as empty in the backup, so it must be left exactly as
+        # it was instead of being filled with defaults.
+        self.assertEqual(state["slots"][6], before["slots"][6])
+
+    def test_catalogs_lists_bundled_collections(self):
+        code = cli.main(["catalogs", "--json"])
+        self.assertEqual(code, 0)
+        names = {info.name for info in available_catalogs()}
+        self.assertIn("fxw", names)
+        self.assertIn("samples", names)
+
+    def test_catalog_init_creates_a_named_catalog(self):
+        code = cli.main(["catalog", "init", "my-looks", "--json"])
+        self.assertEqual(code, 0)
+        directory = self.home / "catalogs" / "my-looks"
+        self.assertTrue(directory.is_dir())
+        self.assertTrue((directory / "README.md").is_file())
+        # Running it again must not pretend it was created.
+        self.assertEqual(cli.main(["catalog", "init", "my-looks", "--json"]), 0)
+
+    def test_catalog_add_copies_one_slot(self):
+        cli.main(["connect", "--mock", "--json"])
+        code = cli.main(
+            [
+                "catalog",
+                "add",
+                "C3",
+                "--catalog",
+                "my-looks",
+                "--name",
+                "My Eterna",
+                "--tags",
+                "cinema,night",
+                "--mock",
+                "--json",
+            ]
+        )
+        self.assertEqual(code, 0)
+        path = self.home / "catalogs" / "my-looks" / "my-eterna.json"
+        self.assertTrue(path.is_file())
+        data = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(data["name"], "My Eterna")
+        self.assertEqual(data["tags"], ["cinema", "night"])
+        self.assertIn("recipe", data)
+        self.assertIn(data["recipe"]["film_simulation"], data["recipe"].values())
+
+    def test_catalog_export_saves_every_non_empty_slot(self):
+        cli.main(["connect", "--mock", "--json"])
+        state = json.loads((self.home / "mock-camera.json").read_text(encoding="utf-8"))
+        state["slots"][6] = {"name": "", "props": [0xFFFF] * 19, "empty": True}
+        (self.home / "mock-camera.json").write_text(json.dumps(state), encoding="utf-8")
+        code = cli.main(["catalog", "export", "--mock", "--json"])
+        self.assertEqual(code, 0)
+        catalog = self.home / "catalog"
+        written = sorted(path.name for path in catalog.glob("*.json"))
+        self.assertEqual(len(written), 6)
+        self.assertFalse(any("c7" in name for name in written))
+
+    def test_catalog_export_can_write_a_bundle(self):
+        cli.main(["connect", "--mock", "--json"])
+        target = self.home / "looks.json"
+        code = cli.main(["catalog", "export", "--out", str(target), "--mock", "--json"])
+        self.assertEqual(code, 0)
+        payload = json.loads(target.read_text(encoding="utf-8"))
+        self.assertEqual(payload["version"], 1)
+        self.assertGreaterEqual(len(payload["recipes"]), 6)
+
+    def test_catalog_list_filters_by_catalog(self):
+        from ozure.catalog import repo_catalog_dir
+
+        fxw = load_catalog(repo_catalog_dir() / "fxw")
+        self.assertGreaterEqual(len(fxw), 50)
+        code = cli.main(["catalog", "list", "--catalog", "fxw", "--json"])
+        self.assertEqual(code, 0)
 
     def test_unknown_catalog_recipe_is_an_error(self):
         cli.main(["connect", "--mock", "--json"])

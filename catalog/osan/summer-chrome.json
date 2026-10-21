@@ -1,0 +1,33 @@
+{
+  "slug": "summer-chrome",
+  "name": "Summer Chrome",
+  "source": "https://www.osan-bilgi.com/summer-chrome",
+  "notes": "Film Simulation: Classic Chrome · Dynamic Range: DR400 · Grain Effect: Strong, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Strong · White Balance: Auto, -6 Blue & +5 Red · Highlight: -2 · Shadow: -2 · Color: +4 · Sharpness: 0 · High ISO NR: -4 · Clarity: -4",
+  "tags": [
+    "imported",
+    "osan"
+  ],
+  "recipe": {
+    "name": "Summer Chrome",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 5,
+      "shift_b": -6
+    },
+    "highlight": -2,
+    "shadow": -2,
+    "color": 4,
+    "sharpness": 0,
+    "noise_reduction": -4,
+    "clarity": -4,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

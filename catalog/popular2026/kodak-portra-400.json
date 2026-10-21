@@ -1,0 +1,33 @@
+{
+  "slug": "kodak-portra-400",
+  "name": "Kodak Portra 400",
+  "source": "https://fujixweekly.com/2020/06/10/fujifilm-x100v-film-simulation-kodak-portra-400/",
+  "notes": "Film Simulation: Classic Chrome · Dynamic Range: DR-Auto · Highlight: -1 · Shadow: -2 · Color: +2 · Noise Reduction: -4 · Sharpening: -2 · Clarity: +2 · Grain Effect: Strong, Small · Color Chrome Effect: Strong · Color Chrome Effect Blue: Weak · White Balance: Daylight, +3 Red & -5 Blue",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "Kodak Portra 400",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr100",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "weak",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "daylight",
+      "shift_r": 3,
+      "shift_b": -5
+    },
+    "highlight": -1,
+    "shadow": -2,
+    "color": 2,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": 2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

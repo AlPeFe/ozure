@@ -1,0 +1,33 @@
+{
+  "slug": "clockwise-negative",
+  "name": "Clockwise Negative",
+  "source": "https://www.instagram.com/reel/Da1zXNRtm1U/?utm_source=ig_web_button_share_sheet",
+  "notes": "WB: Auto (R +1, B -3) · DR400 · Grain: Weak/Strong Small · CC: Strong · FX Blue: Weak · Color: +4 · Sharpness: -2 · H -1.0 / S -1.5 · NR: -4 · Clarity: -3",
+  "tags": [
+    "imported",
+    "instagram"
+  ],
+  "recipe": {
+    "name": "Clockwise Negative",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 1,
+      "shift_b": -3
+    },
+    "highlight": -1,
+    "shadow": -1.5,
+    "color": 4,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "slug": "pacific-blues-iv",
+  "name": "Pacific Blues (IV)",
+  "source": "https://fujixweekly.com/2022/08/04/fujifilm-x-e4-x-trans-iv-film-simulation-recipe-pacific-blues/",
+  "notes": "Film Simulation: Classic Negative · Dynamic Range: DR400 · Grain Effect: Strong, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Strong · White Balance: 5800K, +1 Red & -3 Blue · Highlight: -2 · Shadow: +3 · Color: +4 · Sharpness: -2 · High ISO NR: -4 · Clarity: -3",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "Pacific Blues (IV)",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 1,
+      "shift_b": -3,
+      "color_temperature": 5800
+    },
+    "highlight": -2,
+    "shadow": 3,
+    "color": 4,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "slug": "summer-of-1960",
+  "name": "Summer of 1960",
+  "source": "https://fujixweekly.com/2023/03/22/summer-of-1960-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Nostalgic Neg. · Grain Effect: Strong, Small · Color Chrome Effect: Off · Color Chrome FX Blue: Strong · White Balance: 5250K, -3 Red & -5 Blue · Dynamic Range: DR400 · Highlight: +4 · Shadow: +2 · Color: +3 · Sharpness: -4 · High ISO NR: -4 · Clarity: -3 · ISO: Auto, up to ISO 6400 · Exposure Compensation: +1/3 to +1 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Summer of 1960",
+    "film_simulation": "nostalgic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": -3,
+      "shift_b": -5,
+      "color_temperature": 5250
+    },
+    "highlight": 4,
+    "shadow": 2,
+    "color": 3,
+    "sharpness": -4,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

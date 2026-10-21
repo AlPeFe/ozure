@@ -1,0 +1,33 @@
+{
+  "slug": "alpine-negative",
+  "name": "Alpine Negative",
+  "source": "https://www.osan-bilgi.com/alpine-negative",
+  "notes": "Film Simulation: Classic Negative · Dynamic Range: DR400 · Grain Effect: Off · Color Chrome Effect: Off · Color Chrome FX Blue: Strong · White Balance: Auto, -4 Blue & +2 Red · Highlight: -2 · Shadow: +1 · Color: +4 · Sharpness: 0 · High ISO NR: -4 · Clarity: -3",
+  "tags": [
+    "imported",
+    "osan"
+  ],
+  "recipe": {
+    "name": "Alpine Negative",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "off",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 2,
+      "shift_b": -4
+    },
+    "highlight": -2,
+    "shadow": 1,
+    "color": 4,
+    "sharpness": 0,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

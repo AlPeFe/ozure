@@ -1,0 +1,34 @@
+{
+  "slug": "summer-sun",
+  "name": "Summer Sun",
+  "source": "https://fujixweekly.com/2025/06/27/summer-sun-fujifilm-x-e5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Reala Ace · Dynamic Range: DR200 · Grain Effect: Strong, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Weak · White Balance: 7200K, -2 Red & +2 Blue · Highlight: -1 · Shadow: -2 · Color: +4 · Sharpness: -1 · High ISO NR: -4 · Clarity: -3 · ISO: Auto, up to ISO 6400 · Exposure Compensation: 0 to +2/3 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Summer Sun",
+    "film_simulation": "reala_ace",
+    "dynamic_range": "dr200",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": -2,
+      "shift_b": 2,
+      "color_temperature": 7200
+    },
+    "highlight": -1,
+    "shadow": -2,
+    "color": 4,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

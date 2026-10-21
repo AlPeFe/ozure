@@ -1,0 +1,34 @@
+{
+  "slug": "kodak-farbwelt-200-expired",
+  "name": "Kodak Farbwelt 200 Expired",
+  "source": "https://fujixweekly.com/2025/12/09/kodak-farbwelt-200-expired-a-fujifilm-film-simulation-recipe-for-x-trans-v-cameras/",
+  "notes": "Film Simulation: Classic Chrome · Dynamic Range: DR100 · Grain Effect: Strong, Large · Color Chrome Effect: Weak · Color Chrome FX Blue: Strong · White Balance: 7500K, +1 Red & -4 Blue · Highlight: -2 · Shadow: -2 · Color: -3 · Sharpness: -4 · High ISO NR: -4 · Clarity: -4 · ISO: Auto, up to ISO 6400 · Exposure Compensation: 0 to -1 1/3 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Kodak Farbwelt 200 Expired",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr100",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "weak",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 1,
+      "shift_b": -4,
+      "color_temperature": 7500
+    },
+    "highlight": -2,
+    "shadow": -2,
+    "color": -3,
+    "sharpness": -4,
+    "noise_reduction": -4,
+    "clarity": -4,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

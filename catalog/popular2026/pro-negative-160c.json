@@ -1,0 +1,33 @@
+{
+  "slug": "pro-negative-160c",
+  "name": "PRO Negative 160C",
+  "source": "https://fujixweekly.com/2024/03/27/pro-negative-160c-fujifilm-x100vi-film-simulation-recipe/",
+  "notes": "Film Simulation: Pro Neg. Hi · Dynamic Range: DR200 · Grain Effect: Weak, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Weak · White Balance: Auto, +1 Red & -2 Blue · Highlight: -0.5 · Shadow: -0.5 · Color: +4 · Sharpness: -1 · High ISO NR: -4 · Clarity: -2",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "PRO Negative 160C",
+    "film_simulation": "pro_neg_hi",
+    "dynamic_range": "dr200",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 1,
+      "shift_b": -2
+    },
+    "highlight": -0.5,
+    "shadow": -0.5,
+    "color": 4,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

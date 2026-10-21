@@ -1,0 +1,33 @@
+{
+  "slug": "reggies-bw",
+  "name": "Reggie's B&W",
+  "source": "https://fujixweekly.com/fujifilm-x-trans-v-recipes/",
+  "notes": "Film Simulation: Acros + R Filter · Grain Effect: Weak, Small · WB: Auto · Dynamic Range: Auto · DR Priority: Off · Tone Curve: H +2, S +2 · Sharpness: -1 · Noise Reduction: -3 · Clarity: 0",
+  "tags": [
+    "imported",
+    "reggies"
+  ],
+  "recipe": {
+    "name": "Reggie's B&W",
+    "film_simulation": "acros_r",
+    "dynamic_range": "dr100",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 0,
+      "shift_b": 0
+    },
+    "highlight": 2,
+    "shadow": 2,
+    "color": 0,
+    "sharpness": -1,
+    "noise_reduction": -3,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

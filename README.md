@@ -28,12 +28,14 @@ from inside any agent (pi / Hanni, Codex, Claude Code), because it is just a CLI
 with a strict JSON contract.
 
 ```bash
-ozure connect                          # find the camera, list C1..C7
-ozure list                             # what is loaded right now
-ozure catalog list -q acros            # what could be loaded
-ozure apply acros-night --slot C6      # dry run: show the diff, exit 10
+ozure connect                             # find the camera, list C1..C7
+ozure list                                # what is loaded right now
+ozure catalogs                            # which catalogs exist (126 recipes bundled)
+ozure catalog list -q acros               # what could be installed
+ozure apply acros-night --slot C6         # dry run: show the diff, exit 10
 ozure apply acros-night --slot C6 --yes   # write, then read back and verify
-ozure backup                           # all seven slots to one JSON file
+ozure catalog export                      # keep the camera's recipes in your own catalog
+ozure backup                              # all seven slots to one JSON file
 ```
 
 ## Install
@@ -61,6 +63,25 @@ The repo **is** the skill: [`SKILL.md`](SKILL.md) tells an agent when to reach
 for it, which commands are safe, and how to read the JSON. Copy or symlink the
 folder into your skills directory (`~/.claude/skills/`, `~/.pi/skills/`,
 `~/.agents/skills/`). `AGENTS.md` points here for Codex-style agents.
+
+## Catalogs
+
+A catalog is a folder of JSON recipes. Ten curated collections ship in the repo —
+**Fuji X Weekly (79)**, *2026 Popular (26)*, *Osan-Bilgi*, *Alex Armitage*,
+*Reggie's*, *EDDY*, *Kevin Mullins B&W*, *Instagram*, *Reddit* and five samples —
+imported from [`fuji-ptp-android`](https://github.com/AlPeFe/fuji-ptp-android)
+(`tools/import_discover.py` keeps them reproducible).
+
+```bash
+ozure catalogs                        # bundled + your own, with counts
+ozure catalog list --catalog fxw      # recipes of one collection
+ozure catalog init my-looks           # a new, empty catalog
+ozure catalog add C3 --catalog my-looks --name "My Eterna"
+ozure catalog export --catalog my-looks   # every non-empty slot
+```
+
+`ozure apply <slug>` searches every catalog, so you do not have to remember where
+a recipe lives. Your own catalog wins on name collisions.
 
 ## Safety, on purpose
 

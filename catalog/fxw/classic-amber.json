@@ -1,0 +1,33 @@
+{
+  "slug": "classic-amber",
+  "name": "Classic Amber",
+  "source": "https://fujixweekly.com/2025/11/01/classic-amber-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Negative · Dynamic Range: DR400 · Grain Effect: Weak, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Strong · White Balance: Fluorescent 1, +1 Red & -6 Blue · Highlight: -1.5 · Shadow: +2.5 · Color: +4 · Sharpness: -2 · High ISO NR: -4 · Clarity: -3 · ISO: Auto, up to ISO 6400 · Exposure Compensation: +2/3 to +1 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Classic Amber",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "weak_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "fluorescent_1",
+      "shift_r": 1,
+      "shift_b": -6
+    },
+    "highlight": -1.5,
+    "shadow": 2.5,
+    "color": 4,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

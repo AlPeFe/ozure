@@ -1,0 +1,33 @@
+{
+  "slug": "kodak-t-max-100-soft-tone",
+  "name": "Kodak T-Max 100 Soft Tone",
+  "source": "https://fujixweekly.com/2024/10/07/kodak-t-max-100-soft-tone-a-film-simulation-recipe-for-fujifilm-x-trans-iv-x-trans-v-cameras-part-2/",
+  "notes": "Film Simulation: Monochrome+G · Monochromatic Color(Toning) : WC 0 & MG 0 (Off) · Grain Effect: Weak, Large · Color Chrome Effect: Off · Color Chrome FX Blue: Off · White Balance: Daylight, -6 Red & -3 Blue · Dynamic Range: DR200 · Highlight: -0.5 · Shadow: +1.5 · Sharpness: -1 · High ISO NR: -4 · Clarity: -1 · ISO: up to ISO 6400 · Exposure Compensation: -2/3 to +2/3 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Kodak T-Max 100 Soft Tone",
+    "film_simulation": "monochrome_g",
+    "dynamic_range": "dr200",
+    "grain_effect": "weak_large",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "daylight",
+      "shift_r": -6,
+      "shift_b": -3
+    },
+    "highlight": -0.5,
+    "shadow": 1.5,
+    "color": 0,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": -1,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

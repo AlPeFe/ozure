@@ -23,10 +23,25 @@ from pathlib import Path
 from typing import Any
 
 from . import __version__, ui
-from .catalog import CatalogRecipe, find, load_catalog, resolve_catalog_dir
-from .errors import DryRun, OzureError, UsageError
+from .catalog import (
+    CatalogRecipe,
+    available_catalogs,
+    find,
+    load_all_catalogs,
+    load_catalog,
+    new_catalog_dir,
+    repo_catalog_dir,
+    resolve_catalog_dir,
+    slugify,
+    unique_slug,
+    write_bundle,
+    write_catalog_readme,
+    write_entry,
+)
+from .errors import DryRun, InvalidRecipe, OzureError, UsageError
 from .fuji import FujiPtp
 from .mockcam import MockCameraTransport, create_transport, save_state, state_from_recipes
+from .paths import catalogs_root
 from .recipe import DR_PRIORITIES, MONO_FILM_SIMULATIONS, Recipe, parse_slot, slot_name
 from .transport import UsbTransport
 
@@ -514,7 +529,7 @@ def _write_and_verify(
         if mismatches:
             ui.warn(f"camera returned different values for: {', '.join(mismatches)}")
         elif out.data.get("backup"):
-            print(ui.paint(f"  backup: {out.data['backup']}", ui.GREY))
+            print(ui.paint(f"  backup: {ui.short_path(out.data['backup'])}", ui.GREY))
 
 
 def cmd_set(args: argparse.Namespace, out: Output) -> None:
@@ -640,8 +655,10 @@ def _load_reference(reference: str, catalog_dir: str | None) -> tuple[Path | str
             )
         entry = _entry_from_file(data, path.name)
         return path, entry
-    catalog = load_catalog(resolve_catalog_dir(catalog_dir))
-    return f"catalog:{resolve_catalog_dir(catalog_dir)}", find(catalog, reference)
+    # Searching every reachable catalog keeps `apply <slug>` working without
+    # having to remember which collection a recipe came from.
+    catalog = load_all_catalogs()
+    return f"catalog:{catalog_dir or 'all'}", find(catalog, reference)
 
 
 def _entry_from_file(data: dict[str, Any], fallback_name: str) -> CatalogRecipe:
@@ -695,7 +712,7 @@ def cmd_backup(args: argparse.Namespace, out: Output) -> None:
     target.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     out.set(path=str(target), camera=camera_info, slots=payload["slots"])
     if not args.json:
-        ui.ok(f"backup written to {target}")
+        ui.ok(f"backup written to {ui.short_path(target)}")
     out.finish()
 
 
@@ -764,54 +781,249 @@ def cmd_restore(args: argparse.Namespace, out: Output) -> None:
     out.finish()
 
 
-def cmd_catalog(args: argparse.Namespace, out: Output) -> None:
-    if args.catalog_command == "format":
-        text = FORMAT_DOC.strip()
-        out.set(format=text)
-        if not args.json:
-            print(text)
-        out.finish()
-        return
-    directory = resolve_catalog_dir(args.catalog)
-    catalog = load_catalog(directory)
-    if args.catalog_command == "list":
-        matches = [entry for entry in catalog if entry.matches(args.query or "")]
-        out.set(
-            directory=str(directory),
-            count=len(matches),
-            recipes=[entry.to_dict() for entry in matches],
-        )
-        if not args.json:
-            if not matches:
-                print(ui.paint(f"no recipes in {directory}", ui.GREY))
-            else:
-                print(
-                    ui.table(
-                        ["slug", "name", "film", "tags"],
-                        [
-                            (entry.slug, entry.name, entry.film, ",".join(entry.tags))
-                            for entry in matches
-                        ],
-                    )
+def cmd_catalogs(args: argparse.Namespace, out: Output) -> None:
+    catalogs = available_catalogs()
+    default = resolve_catalog_dir(None)
+    out.set(
+        default=str(default),
+        catalogs_root=str(catalogs_root()),
+        bundled=str(repo_catalog_dir()),
+        catalog=[info.to_dict() for info in catalogs],
+    )
+    if not args.json:
+        if not catalogs:
+            print(ui.paint("no catalogs yet", ui.GREY))
+        else:
+            print(
+                ui.table(
+                    ["catalog", "kind", "recipes", "about"],
+                    [
+                        (
+                            info.name,
+                            info.kind,
+                            str(info.recipes),
+                            info.tagline or info.source or info.title,
+                        )
+                        for info in catalogs
+                    ],
                 )
-                print()
-                print(ui.paint(f"{len(matches)} recipe(s) in {directory}", ui.GREY))
-        out.finish()
-        return
-    if args.catalog_command == "show":
-        entry = find(catalog, args.ref)
-        out.set(recipe=entry.to_dict())
-        if not args.json:
-            print(ui.paint(entry.name, ui.BOLD) + ui.paint(f"  ({entry.slug})", ui.GREY))
-            if entry.notes:
-                print(f"  {entry.notes}")
-            if entry.author or entry.source:
-                print(ui.paint(f"  {entry.author or ''} {entry.source or ''}".rstrip(), ui.GREY))
+            )
+        print()
+        print(ui.paint(f"mine: {ui.short_path(default)}", ui.GREY))
+        if repo_catalog_dir().is_dir():
+            print(ui.paint(f"bundled: {ui.short_path(repo_catalog_dir())}", ui.GREY))
+    out.finish()
+
+
+def cmd_catalog_list(args: argparse.Namespace, out: Output) -> None:
+    directory = resolve_catalog_dir(args.catalog) if args.catalog else None
+    if directory:
+        recipes = load_catalog(directory)
+        for entry in recipes:
+            entry.catalog = directory.name
+    else:
+        recipes = load_all_catalogs()
+    matches = [entry for entry in recipes if entry.matches(args.query or "")]
+    out.set(
+        directory=str(directory) if directory else None,
+        count=len(matches),
+        catalogs=sorted({entry.catalog for entry in matches if entry.catalog}),
+        recipes=[entry.to_dict() for entry in matches],
+    )
+    if not args.json:
+        if not matches:
+            where = f"in {directory}" if directory else "in any catalog"
+            print(ui.paint(f"no recipes {where}", ui.GREY))
+            print(
+                ui.paint(
+                    "hint: ozure catalogs · ozure catalog export · ozure catalog init NAME",
+                    ui.GREY,
+                )
+            )
+        else:
+            print(
+                ui.table(
+                    ["catalog", "slug", "name", "film", "tags"],
+                    [
+                        (
+                            entry.catalog or "-",
+                            entry.slug,
+                            entry.name,
+                            entry.film,
+                            ",".join(entry.tags),
+                        )
+                        for entry in matches
+                    ],
+                )
+            )
             print()
-            print(json.dumps(entry.recipe.to_dict(), indent=2, ensure_ascii=False))
-        out.finish()
-        return
-    raise UsageError("unknown catalog command")
+            print(ui.paint(f"{len(matches)} recipe(s)", ui.GREY))
+    out.finish()
+
+
+def cmd_catalog_show(args: argparse.Namespace, out: Output) -> None:
+    directory = resolve_catalog_dir(args.catalog) if args.catalog else None
+    if directory:
+        catalog = load_catalog(directory)
+        for entry in catalog:
+            entry.catalog = directory.name
+    else:
+        catalog = load_all_catalogs()
+    entry = find(catalog, args.ref)
+    out.set(recipe=entry.to_dict())
+    if not args.json:
+        print(ui.paint(entry.name, ui.BOLD) + ui.paint(f"  ({entry.slug})", ui.GREY))
+        if entry.catalog:
+            print(ui.paint(f"  catalog: {entry.catalog}", ui.GREY))
+        if entry.notes:
+            print(f"  {entry.notes}")
+        if entry.author or entry.source:
+            print(ui.paint(f"  {entry.author or ''} {entry.source or ''}".rstrip(), ui.GREY))
+        print()
+        print(json.dumps(entry.recipe.to_dict(), indent=2, ensure_ascii=False))
+    out.finish()
+
+
+def cmd_catalog_format(args: argparse.Namespace, out: Output) -> None:
+    text = FORMAT_DOC.strip()
+    out.set(format=text)
+    if not args.json:
+        print(text)
+    out.finish()
+
+
+def cmd_catalog_init(args: argparse.Namespace, out: Output) -> None:
+    directory = new_catalog_dir(args.name, args.catalog).expanduser()
+    existed = directory.is_dir()
+    directory.mkdir(parents=True, exist_ok=True)
+    readme = write_catalog_readme(directory)
+    out.set(
+        directory=str(directory),
+        created=not existed,
+        readme=str(readme),
+        recipes=len(load_catalog(directory)),
+    )
+    if not args.json:
+        if existed:
+            ui.ok(f"catalog already here: {ui.short_path(directory)}")
+        else:
+            ui.ok(f"catalog ready: {ui.short_path(directory)}")
+        print(
+            ui.paint(
+                "  copy the camera into it: "
+                f"ozure catalog export --catalog {ui.short_path(directory)}",
+                ui.GREY,
+            )
+        )
+        print(ui.paint("  or drop your own JSON files there", ui.GREY))
+    out.finish()
+
+
+def _tag_list(value: str | None) -> list[str]:
+    if not value:
+        return []
+    return [tag.strip() for tag in value.split(",") if tag.strip()]
+
+
+def cmd_catalog_add(args: argparse.Namespace, out: Output) -> None:
+    slot = parse_slot(args.slot)
+    directory = resolve_catalog_dir(args.catalog, create=True)
+    with camera(args) as (fuji, _transport):
+        recipe = fuji.read_slot(slot)
+        camera_info = dict(fuji.camera)
+    if recipe.empty:
+        raise InvalidRecipe(
+            f"{slot_name(slot)} is empty",
+            hint="pick a slot that has a recipe, or run `ozure list` to see them",
+        )
+    name = args.name or recipe.name or slot_name(slot)
+    recipe.name = name
+    slug = unique_slug(directory, slugify(args.slug or name) or slot_name(slot).lower())
+    entry = CatalogRecipe(
+        slug=slug,
+        name=name,
+        recipe=recipe,
+        author=args.author,
+        source=args.source or camera_info.get("model"),
+        notes=args.notes,
+        tags=_tag_list(args.tags),
+    )
+    path = write_entry(directory, entry, force=args.force)
+    out.set(
+        path=str(path),
+        directory=str(directory),
+        slug=slug,
+        name=name,
+        recipe=recipe.to_dict(),
+    )
+    if not args.json:
+        ui.ok(f"{slot_name(slot)} saved as {slug}")
+        print(ui.paint(f"  {ui.short_path(path)}", ui.GREY))
+        print(
+            ui.paint(
+                f"  put it back with: ozure apply {slug} --slot {slot_name(slot)}",
+                ui.GREY,
+            )
+        )
+    out.finish()
+
+
+def cmd_catalog_export(args: argparse.Namespace, out: Output) -> None:
+    directory = resolve_catalog_dir(args.catalog, create=True)
+    with camera(args) as (fuji, _transport):
+        recipes = fuji.read_profile()
+        camera_info = dict(fuji.camera)
+    model = camera_info.get("model") or "camera"
+    entries: list[CatalogRecipe] = []
+    skipped: list[dict[str, str]] = []
+    for index, recipe in enumerate(recipes, start=1):
+        slot = slot_name(index)
+        if recipe.empty and not args.include_empty:
+            skipped.append({"slot": slot, "reason": "empty"})
+            continue
+        name = recipe.name or slot
+        recipe.name = name
+        entries.append(
+            CatalogRecipe(
+                slug=slugify(name) or f"c{index}",
+                name=name,
+                recipe=recipe,
+                source=args.source or f"{model} {slot}",
+                tags=["exported", slot.lower()],
+            )
+        )
+
+    written: list[str] = []
+    if args.out:
+        target = Path(args.out).expanduser()
+        if target.is_dir() or str(args.out).endswith(("/", os.sep)):
+            target = target / f"{timestamp()}-camera.json"
+        written.append(str(write_bundle(target, entries)))
+    else:
+        for entry in entries:
+            slug = entry.slug
+            index = 1
+            while (directory / f"{slug}.json").exists() and not args.force:
+                index += 1
+                slug = f"{entry.slug}-{index}"
+            entry.slug = slug
+            written.append(str(write_entry(directory, entry, force=args.force)))
+
+    out.set(
+        directory=str(directory),
+        written=written,
+        skipped=skipped,
+        recipes=[entry.to_dict() for entry in entries],
+    )
+    if not args.json:
+        for path in written:
+            ui.ok(f"saved {ui.short_path(path)}")
+        for item in skipped:
+            print(ui.paint(f"  skipped {item['slot']}: {item['reason']}", ui.GREY))
+        if written:
+            print()
+            print(ui.paint("  list them with: ozure catalog list", ui.GREY))
+    out.finish()
 
 
 FORMAT_DOC = """
@@ -981,14 +1193,58 @@ def build_parser() -> argparse.ArgumentParser:
     CameraArgs.add(restore)
     restore.set_defaults(func=cmd_restore)
 
-    catalog = sub.add_parser("catalog", parents=[common], help="browse the recipe catalog")
+    catalogs = sub.add_parser("catalogs", parents=[common], help="list the catalogs themselves")
+    catalogs.set_defaults(func=cmd_catalogs)
+
+    catalog = sub.add_parser("catalog", parents=[common], help="work with recipe catalogs")
     catalog_sub = catalog.add_subparsers(dest="catalog_command", required=True)
+
     catalog_list = catalog_sub.add_parser("list", parents=[common], help="list recipes")
     catalog_list.add_argument("--query", "-q", help="filter by slug, name, tag or film")
+    catalog_list.set_defaults(func=cmd_catalog_list)
+
     catalog_show = catalog_sub.add_parser("show", parents=[common], help="show one recipe")
     catalog_show.add_argument("ref", help="slug or name")
-    catalog_sub.add_parser("format", parents=[common], help="print the catalog file format")
-    catalog.set_defaults(func=cmd_catalog)
+    catalog_show.set_defaults(func=cmd_catalog_show)
+
+    catalog_format = catalog_sub.add_parser(
+        "format", parents=[common], help="print the catalog file format"
+    )
+    catalog_format.set_defaults(func=cmd_catalog_format)
+
+    catalog_init = catalog_sub.add_parser(
+        "init", parents=[common], help="create a new, empty catalog"
+    )
+    catalog_init.add_argument("name", nargs="?", help="catalog name (default: your catalog)")
+    catalog_init.set_defaults(func=cmd_catalog_init)
+
+    catalog_add = catalog_sub.add_parser(
+        "add", parents=[common], help="copy one slot from the camera into a catalog"
+    )
+    catalog_add.add_argument("slot", help="C1..C7")
+    catalog_add.add_argument("--slug", help="file name / id (default: from the name)")
+    catalog_add.add_argument("--name", help="recipe name (default: the slot name)")
+    catalog_add.add_argument("--notes", help="free text stored with the recipe")
+    catalog_add.add_argument("--author")
+    catalog_add.add_argument("--source")
+    catalog_add.add_argument("--tags", help="comma separated")
+    catalog_add.add_argument("--force", action="store_true", help="overwrite an existing slug")
+    CameraArgs.add(catalog_add)
+    catalog_add.set_defaults(func=cmd_catalog_add)
+
+    catalog_export = catalog_sub.add_parser(
+        "export", parents=[common], help="save every non-empty slot to a catalog"
+    )
+    catalog_export.add_argument(
+        "--out", metavar="PATH", help="write one bundle file instead of one file per recipe"
+    )
+    catalog_export.add_argument(
+        "--include-empty", action="store_true", help="also export empty slots"
+    )
+    catalog_export.add_argument("--source", help="provenance string stored with each recipe")
+    catalog_export.add_argument("--force", action="store_true", help="overwrite existing files")
+    CameraArgs.add(catalog_export)
+    catalog_export.set_defaults(func=cmd_catalog_export)
 
     return parser
 

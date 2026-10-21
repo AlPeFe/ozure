@@ -1,0 +1,33 @@
+{
+  "slug": "fujicolor-superia-1600",
+  "name": "Fujicolor Superia 1600",
+  "source": "https://fujixweekly.com/2024/02/25/fujicolor-superia-1600-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Negative · Dynamic Range: DR400 · Grain Effect: Strong, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Weak · White Balance: Daylight, +3 Red & +1 Blue · Highlight:0 · Shadow: +2 · Color: -3 · Sharpness: -1 · High ISO NR: -4 · Clarity: -4 · ISO: Auto, up to ISO 6400 - for best results: 1600 to 6400 · Exposure Compensation: 0 to +1 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Fujicolor Superia 1600",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "daylight",
+      "shift_r": 3,
+      "shift_b": 1
+    },
+    "highlight": 0,
+    "shadow": 2,
+    "color": -3,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": -4,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

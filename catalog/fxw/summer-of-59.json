@@ -1,0 +1,33 @@
+{
+  "slug": "summer-of-59",
+  "name": "Summer of '59",
+  "source": "https://fujixweekly.com/2026/05/02/summer-of-59-a-fujifilm-recipe-for-fifth-generation-cameras/",
+  "notes": "Film Simulation: Eterna · Grain Effect: Strong, Small · Color Chrome Effect: Weak · Color Chrome FX Blue: Strong · White Balance: Auto, +4 Red & -8 Blue · Dynamic Range: DR400 · Highlight: +3 · Shadow: +0.5 · Color: 0 · Sharpness: -1 · High ISO NR: -4 · Clarity: -3",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Summer of '59",
+    "film_simulation": "eterna",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "weak",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 4,
+      "shift_b": -8
+    },
+    "highlight": 3,
+    "shadow": 0.5,
+    "color": 0,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

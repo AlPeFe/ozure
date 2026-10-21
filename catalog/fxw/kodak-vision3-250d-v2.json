@@ -1,0 +1,33 @@
+{
+  "slug": "kodak-vision3-250d-v2",
+  "name": "Kodak Vision3 250D v2",
+  "source": "https://fujixweekly.com/2023/12/19/kodak-vision3-250d-v2-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Nostalgic Neg. · Dynamic Range: DR200 · Grain Effect: Strong, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Off · White Balance: Fluorescent 1, -5 Red & 0 Blue · Highlight: +4 · Shadow: +3 · Color: -1 · Sharpness: -2 · High ISO NR: -4 · Clarity: -2 · ISO: Auto, up to ISO 6400 · Exposure Compensation: 0 to +2/3 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Kodak Vision3 250D v2",
+    "film_simulation": "nostalgic_negative",
+    "dynamic_range": "dr200",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "fluorescent_1",
+      "shift_r": -5,
+      "shift_b": 0
+    },
+    "highlight": 4,
+    "shadow": 3,
+    "color": -1,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "slug": "frgmt-bw",
+  "name": "FRGMT B&W",
+  "source": "https://fujixweekly.com/2025/12/04/frgmt-bw-a-fujifilm-film-simulation-recipe-by-hiroshi-fujiwara/",
+  "notes": "Film Simulation: Acros(incl. +Ye, +R, or +G) · Monochromatic Color(Toning) : WC 0 & MG 0 (Off) · Dynamic Range: DR-Auto · Grain Effect: Strong, Large · Color Chrome Effect: Off · Color Chrome FX Blue: Off · White Balance: Auto, 0 Red & 0 Blue · Highlight: +4 · Shadow: +2 · Sharpness: -4 · High ISO NR: -4 · Clarity: +5",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "FRGMT B&W",
+    "film_simulation": "acros",
+    "dynamic_range": "dr100",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 0,
+      "shift_b": 0
+    },
+    "highlight": 4,
+    "shadow": 2,
+    "color": 0,
+    "sharpness": -4,
+    "noise_reduction": -4,
+    "clarity": 5,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "slug": "classic-bw",
+  "name": "Classic B&W",
+  "source": "https://fujixweekly.com/2025/08/03/classic-bw-film-simulation-recipe/",
+  "notes": "Film Simulation: Acros+G · Monochromatic Color(Toning) : WC 0 & MG 0 (Off) · Dynamic Range: DR200 · Grain Effect: Strong, Large · Color Chrome Effect: Off · Color Chrome FX Blue: Off · White Balance: Incandescent, -9 Red & +9 Blue · Highlight: +3 · Shadow: +4 · Sharpness: +1 · High ISO NR: -4 · Clarity: +3",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Classic B&W",
+    "film_simulation": "acros_g",
+    "dynamic_range": "dr200",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "incandescent",
+      "shift_r": -9,
+      "shift_b": 9
+    },
+    "highlight": 3,
+    "shadow": 4,
+    "color": 0,
+    "sharpness": 1,
+    "noise_reduction": -4,
+    "clarity": 3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

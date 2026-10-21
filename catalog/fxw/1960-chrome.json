@@ -1,0 +1,33 @@
+{
+  "slug": "1960-chrome",
+  "name": "1960 Chrome",
+  "source": "https://fujixweekly.com/2024/07/15/1960-chrome-fujifilm-x-t5-x-trans-v-x-e4-x-trans-iv-film-simulation-recipe/",
+  "notes": "Film Simulation: Eterna Bleach Bypass · Dynamic Range: DR400 · Grain Effect: Strong, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Off (X-Trans V); Weak (X-Trans IV) · White Balance: Fluorescent 1, -2 Red & -4 Blue · Highlight: -2 · Shadow: -1 · Color: +2 · Sharpness: -1 · High ISO NR: -4 · Clarity: -2 · ISO: Auto, up to ISO 6400 · Exposure Compensation: +1/3 to +1 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "1960 Chrome",
+    "film_simulation": "eterna_bleach_bypass",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "fluorescent_1",
+      "shift_r": -2,
+      "shift_b": -4
+    },
+    "highlight": -2,
+    "shadow": -1,
+    "color": 2,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

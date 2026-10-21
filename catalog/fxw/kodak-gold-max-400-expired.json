@@ -1,0 +1,34 @@
+{
+  "slug": "kodak-gold-max-400-expired",
+  "name": "Kodak Gold Max 400 Expired",
+  "source": "https://fujixweekly.com/2024/12/31/kodak-gold-max-400-expired-fujifilm-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Reala Ace · Dynamic Range: DR400 · Grain Effect: Strong, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Strong · White Balance: 6700K, +1 Red & +4 Blue · Highlight: -1.5 · Shadow: +1.5 · Color: -2 · Sharpness: -2 · High ISO NR: -4 · Clarity: -3 · ISO: Auto, up to ISO 6400 · Exposure Compensation: +2/3 to +1 1/3 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Kodak Gold Max 400 Expired",
+    "film_simulation": "reala_ace",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 1,
+      "shift_b": 4,
+      "color_temperature": 6700
+    },
+    "highlight": -1.5,
+    "shadow": 1.5,
+    "color": -2,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

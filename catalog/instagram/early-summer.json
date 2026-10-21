@@ -1,0 +1,33 @@
+{
+  "slug": "early-summer",
+  "name": "Early Summer",
+  "source": "https://www.instagram.com/reel/Da1zXNRtm1U/?utm_source=ig_web_button_share_sheet",
+  "notes": "WB: Shade (R -3, B +3) · DR400 · Grain: Strong Large · CC: Strong · FX Blue: Weak · Color: +2 · Sharpness: 0 · H -1.5 / S -1.0 · NR: -4 · Clarity: 0",
+  "tags": [
+    "imported",
+    "instagram"
+  ],
+  "recipe": {
+    "name": "Early Summer",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "shade",
+      "shift_r": -3,
+      "shift_b": 3
+    },
+    "highlight": -1.5,
+    "shadow": -1,
+    "color": 2,
+    "sharpness": 0,
+    "noise_reduction": -4,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

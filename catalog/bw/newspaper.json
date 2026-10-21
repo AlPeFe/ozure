@@ -1,0 +1,33 @@
+{
+  "slug": "newspaper",
+  "name": "Newspaper",
+  "source": "https://www.kevinmullinsphotography.co.uk/blog/fujifilm-recipe-black-and-white",
+  "notes": "Film Simulation: Acros + Ye · Grain Effect: Strong · Grain Size: Small · WB Shift: R -4, B -3 · Highlight Tone: +4 · Shadow Tone: +4 · Sharpness: +2 · Clarity: 0 · High ISO NR: 0 · Look de prensa B/N de los 70-80",
+  "tags": [
+    "imported",
+    "bw"
+  ],
+  "recipe": {
+    "name": "Newspaper",
+    "film_simulation": "acros_ye",
+    "dynamic_range": "dr100",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": -4,
+      "shift_b": -3
+    },
+    "highlight": 4,
+    "shadow": 4,
+    "color": 0,
+    "sharpness": 2,
+    "noise_reduction": 0,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

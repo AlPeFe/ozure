@@ -1,0 +1,33 @@
+{
+  "slug": "14-film-dial-recipes",
+  "name": "14 Film Dial Recipes",
+  "source": "https://fujixweekly.com/2024/05/16/fujifilm-x-t50-film-dial-settings-14-new-film-simulation-recipes-yes-14/",
+  "notes": "Film Simulation: Any (see below) · Dynamic Range: DR400 · Grain Effect: Weak, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Weak · White Balance: Auto White Priority, +2 Red & -4 Blue · Highlight: -1.5 · Shadow: -1 · Color: +3 · Sharpness: -1 · High ISO NR: -4 · Clarity: -2",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "14 Film Dial Recipes",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr400",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "ambience_priority",
+      "shift_r": 2,
+      "shift_b": -4
+    },
+    "highlight": -1.5,
+    "shadow": -1,
+    "color": 3,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

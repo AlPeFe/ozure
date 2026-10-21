@@ -1,0 +1,37 @@
+{
+  "slug": "vibrant-arizona",
+  "name": "Vibrant Arizona",
+  "source": "https://fujixweekly.com/2023/04/25/getting-a-wes-anderson-look-from-your-fujifilm-camera-4-new-film-simulation-recipes/",
+  "notes": "Film Simulation: Classic Chrome · Grain Effect: Weak, Small · Color Chrome Effect: Off · Color Chrome FX Blue: Weak · White Balance: 4350K, +6 Red & -8 Blue · Dynamic Range: DR-P Strong · Color: +4 · Sharpness: -2 · High ISO NR: -4 · Clarity: -3 · ISO: Auto, up to ISO 6400 · Exposure Compensation: +2/3 to + 1 1/3 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Vibrant Arizona",
+    "film_simulation": "velvia",
+    "dynamic_range": "dr100",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 6,
+      "shift_b": -8,
+      "color_temperature": 4350
+    },
+    "highlight": 0,
+    "shadow": 0,
+    "color": 4,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  },
+  "parse_notes": [
+    "dynamic range priority not representable: Dynamic Range: DR-P Strong"
+  ]
+}

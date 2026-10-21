@@ -12,6 +12,7 @@ import json
 import os
 import sys
 from collections.abc import Iterable, Sequence
+from pathlib import Path
 from typing import Any
 
 COLOR = sys.stdout.isatty() and os.environ.get("NO_COLOR") is None
@@ -65,6 +66,23 @@ def error(text: str, hint: str | None = None) -> None:
     print(paint(f"error: {text}", RED), file=sys.stderr)
     if hint:
         print(paint(f"hint: {hint}", GREY), file=sys.stderr)
+
+
+def short_path(path: str | Path) -> str:
+    """`C:/Users/me/.ozure/catalog` -> `~/.ozure/catalog`, for human output."""
+    text = str(path)
+    overrides = (
+        (os.environ.get("OZURE_HOME"), "~/.ozure"),
+        (str(Path.home()), "~"),
+    )
+    for prefix, replacement in overrides:
+        if not prefix:
+            continue
+        normalised = prefix.replace("\\", "/").rstrip("/")
+        candidate = text.replace("\\", "/")
+        if candidate.startswith(normalised):
+            return replacement + candidate[len(normalised) :]
+    return text
 
 
 def step(text: str) -> None:

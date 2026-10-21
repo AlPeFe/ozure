@@ -90,13 +90,61 @@ ozure restore camera.json            # dry run: prints change counts
 ozure restore camera.json --yes
 ```
 
+### `catalogs`
+
+Lists the catalogs themselves (bundled, the user's own, and named ones) with
+their recipe counts:
+
+```bash
+ozure catalogs
+ozure catalogs --json
+```
+
 ### `catalog list|show|format`
 
 ```bash
-ozure catalog list
+ozure catalog list                      # every recipe, every catalog
+ozure catalog list --catalog fxw        # just that catalog
 ozure catalog list -q acros --json
 ozure catalog show eterna-cinema
 ozure catalog format
+```
+
+### `catalog init [NAME]`
+
+Creates a catalog directory (default: your own `~/.ozure/catalog`) with a
+README explaining the format. `NAME` makes a named catalog under
+`~/.ozure/catalogs/NAME`.
+
+```bash
+ozure catalog init
+ozure catalog init my-looks
+```
+
+### `catalog add SLOT`
+
+Copies one slot from the camera into a catalog — the way to keep a look you
+tuned on the body.
+
+```bash
+ozure catalog add C3
+ozure catalog add C3 --catalog my-looks --name "My Eterna" --tags cinema,night
+ozure catalog add C5 --notes "tuned for overcast" --source "X100VI C5"
+```
+
+Flags: `--catalog`, `--slug`, `--name`, `--notes`, `--author`, `--source`,
+`--tags` (comma separated), `--force` (overwrite an existing slug).
+
+### `catalog export`
+
+Saves every non-empty slot to a catalog, one file per recipe, skipping empties
+(reported in `skipped`).
+
+```bash
+ozure catalog export                         # into your own catalog
+ozure catalog export --catalog my-looks
+ozure catalog export --out camera-2026.json  # one bundle file instead
+ozure catalog export --include-empty
 ```
 
 ## Exit codes

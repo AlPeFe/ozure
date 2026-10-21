@@ -1,0 +1,36 @@
+{
+  "slug": "kodak-portra-160-v2",
+  "name": "Kodak Portra 160 v2",
+  "source": "https://fujixweekly.com/2023/11/10/kodak-portra-160-v2-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Chrome · Grain Effect: Weak, Small · Color Chrome Effect: Weak · Color Chrome FX Blue: Weak · White Balance: Daylight, +4 Red & -5 Blue · Dynamic Range: D-Range Priority (DR-P) Auto · Color: 0 · Sharpness: -1 · High ISO NR: -4 · Clarity: -2 · ISO: Auto, up to ISO 6400 · Exposure Compensation: +1/3 to +1 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Kodak Portra 160 v2",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr100",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "weak",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "daylight",
+      "shift_r": 4,
+      "shift_b": -5
+    },
+    "highlight": 0,
+    "shadow": 0,
+    "color": 0,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  },
+  "parse_notes": [
+    "dynamic range priority not representable: Dynamic Range: D-Range Priority (DR-P) Auto"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "slug": "kodak-ultramax-400",
+  "name": "Kodak Ultramax 400",
+  "source": "https://fujixweekly.com/2023/01/17/kodak-ultramax-400-a-film-simulation-recipe-for-the-fujifilm-x-t5-x-trans-v/",
+  "notes": "Film Simulation: Classic Chrome · Grain Effect: Strong, Large · Color Chrome Effect: Weak · Color Chrome FX Blue: Off · White Balance: Auto, +1 Red & -5 Blue · Dynamic Range: DR-Auto · Highlight: +1 · Shadow: +1 · Color: +4 · Sharpness: 0 · High ISO NR: -4 · Clarity: +3 · ISO: Auto, up to ISO 6400 · Exposure Compensation: +1/3 to +1 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Kodak Ultramax 400",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr100",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "weak",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 1,
+      "shift_b": -5
+    },
+    "highlight": 1,
+    "shadow": 1,
+    "color": 4,
+    "sharpness": 0,
+    "noise_reduction": -4,
+    "clarity": 3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

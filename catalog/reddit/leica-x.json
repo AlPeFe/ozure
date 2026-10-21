@@ -1,0 +1,33 @@
+{
+  "slug": "leica-x",
+  "name": "LEICA X",
+  "source": "https://www.reddit.com/r/fujix/",
+  "notes": "Film Sim: Classic Chrome · Grain: Off · Chrome Effect: Strong · FX Blue: Strong · WB: Auto (R +1, B -2) · DRange: Auto · DRange Prio: Off · Curve: H -1, S 0 · Color: +4 · Sharpness: 0 · High ISO NR: -4 · Clarity: 0",
+  "tags": [
+    "imported",
+    "reddit"
+  ],
+  "recipe": {
+    "name": "LEICA X",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr100",
+    "grain_effect": "off",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 1,
+      "shift_b": -2
+    },
+    "highlight": -1,
+    "shadow": 0,
+    "color": 4,
+    "sharpness": 0,
+    "noise_reduction": -4,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

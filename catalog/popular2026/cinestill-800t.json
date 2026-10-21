@@ -1,0 +1,34 @@
+{
+  "slug": "cinestill-800t",
+  "name": "CineStill 800T",
+  "source": "https://fujixweekly.com/2024/04/16/cinestill-800t-fujifilm-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Eterna · Dynamic Range: DR400 · Grain Effect: Strong, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Weak · White Balance: 4000K, -5 Red & +2 Blue · Highlight: -1 · Shadow: +2 · Color: -1 · Sharpness: -2 · High ISO NR: -4 · Clarity: -3",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "CineStill 800T",
+    "film_simulation": "eterna",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": -5,
+      "shift_b": 2,
+      "color_temperature": 4000
+    },
+    "highlight": -1,
+    "shadow": 2,
+    "color": -1,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

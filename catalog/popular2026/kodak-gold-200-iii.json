@@ -1,0 +1,33 @@
+{
+  "slug": "kodak-gold-200-iii",
+  "name": "Kodak Gold 200 (III)",
+  "source": "https://fujixweekly.com/2020/04/16/my-fujifilm-x-t30-kodak-gold-200-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Chrome · Dynamic Range: DR-Auto · Highlight: -2 · Shadow: +1 · Color: +3 · Noise Reduction: -4 · Sharpening: -2 · Grain Effect: Strong · Color Chrome Effect: Off · White Balance: Daylight, +4 Red & -5 Blue",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "Kodak Gold 200 (III)",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr100",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "daylight",
+      "shift_r": 4,
+      "shift_b": -5
+    },
+    "highlight": -2,
+    "shadow": 1,
+    "color": 3,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

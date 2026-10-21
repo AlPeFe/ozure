@@ -1,0 +1,37 @@
+{
+  "slug": "classic-color",
+  "name": "Classic Color",
+  "source": "https://fujixweekly.com/2024/04/22/classic-color-fujifilm-x-t5-x-trans-v-and-x-e4-x-trans-iv-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Chrome · Dynamic Range: DR400 · Grain Effect: Strong, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Strong · Weak · White Balance: 5300K, 0 Red & -6 Blue · Highlight: -0.5 · Shadow: -2 · Color: +3 · Sharpness: -2 · High ISO NR: -4 · Clarity: -2 · ISO: Auto, up to ISO 6400 · Exposure Compensation: 0 to +1 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Classic Color",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 0,
+      "shift_b": -6,
+      "color_temperature": 5300
+    },
+    "highlight": -0.5,
+    "shadow": -2,
+    "color": 3,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  },
+  "parse_notes": [
+    "ignored: Weak"
+  ]
+}

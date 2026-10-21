@@ -1,0 +1,33 @@
+{
+  "slug": "eddys-point-shoot-2",
+  "name": "EDDY'S POINT & SHOOT 2",
+  "source": "",
+  "notes": "Para sunset/golden hour · Film Sim: Classic Negative · Grain: Strong Large · Colour Chrome: Strong · FX Blue: Strong · WB: Auto (R +5, B -5) · Dynamic Range: 200 · Tone Curve: H -1 / S +2 · Colour: +4 · Sharpness: -4 · NR: -4 · Clarity: 0 · Usa Tiffen Black Pro Mist 1/8 (si no, Clarity -3)",
+  "tags": [
+    "imported",
+    "eddy"
+  ],
+  "recipe": {
+    "name": "EDDY'S POINT & SHOOT 2",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr200",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 5,
+      "shift_b": -5
+    },
+    "highlight": -1,
+    "shadow": 2,
+    "color": 4,
+    "sharpness": -4,
+    "noise_reduction": -4,
+    "clarity": 1,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "slug": "easy-reala-ace",
+  "name": "Easy Reala Ace",
+  "source": "https://fujixweekly.com/2024/06/20/easy-reala-ace-fujifilm-x100vi-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Reala Ace · Dynamic Range: DR400 · Grain Effect: Weak, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Weak · White Balance: Auto, 0 Red & 0 Blue · Highlight: -1 · Shadow: 0 · Color: 0 · Sharpness: 0 · High ISO NR: -4 · Clarity: 0",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "Easy Reala Ace",
+    "film_simulation": "reala_ace",
+    "dynamic_range": "dr400",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 0,
+      "shift_b": 0
+    },
+    "highlight": -1,
+    "shadow": 0,
+    "color": 0,
+    "sharpness": 0,
+    "noise_reduction": -4,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

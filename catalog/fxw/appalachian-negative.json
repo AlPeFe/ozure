@@ -1,0 +1,34 @@
+{
+  "slug": "appalachian-negative",
+  "name": "Appalachian Negative",
+  "source": "https://fujixweekly.com/2024/06/18/appalachian-negative-fujifilm-x100vi-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Nostalgic Neg. · Dynamic Range: DR400 · Grain Effect: Weak, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Weak · White Balance: 5200K, +2 Red & -2 Blue · Highlight: -1.5 · Shadow: 0 · Color: +4 · Sharpness: +2 · High ISO NR: -4 · Clarity: 0 · ISO: Auto, up to ISO 6400 · Exposure Compensation: +2/3 to +1 1/3 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Appalachian Negative",
+    "film_simulation": "nostalgic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "weak_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 2,
+      "shift_b": -2,
+      "color_temperature": 5200
+    },
+    "highlight": -1.5,
+    "shadow": 0,
+    "color": 4,
+    "sharpness": 2,
+    "noise_reduction": -4,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

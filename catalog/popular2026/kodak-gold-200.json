@@ -1,0 +1,33 @@
+{
+  "slug": "kodak-gold-200",
+  "name": "Kodak Gold 200",
+  "source": "https://fujixweekly.com/2023/10/24/kodak-gold-200-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Chrome · Grain Effect: Strong, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Weak · White Balance: Daylight, +4 Red & -4 Blue · Dynamic Range: DR400 · Highlight: 0 · Shadow: +1 · Color: +4 · Sharpness: -2 · High ISO NR: -4 · Clarity: +2",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "Kodak Gold 200",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "daylight",
+      "shift_r": 4,
+      "shift_b": -4
+    },
+    "highlight": 0,
+    "shadow": 1,
+    "color": 4,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": 2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

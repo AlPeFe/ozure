@@ -1,0 +1,34 @@
+{
+  "slug": "universal-negative",
+  "name": "Universal Negative",
+  "source": "https://fujixweekly.com/2025/03/28/universal-negative-14-fujifilm-x100vi-x-trans-v-film-simulation-recipes-yes-14/",
+  "notes": "Film Simulation: Any (see below) · Dynamic Range: DR400 · Grain Effect: Strong, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Strong · White Balance: 4000K, 0 Red & -5 Blue · Highlight: 0 · Shadow: -2 · Color: -2 · Sharpness: -2 · High ISO NR: -4 · Clarity: 0",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "Universal Negative",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 0,
+      "shift_b": -5,
+      "color_temperature": 4000
+    },
+    "highlight": 0,
+    "shadow": -2,
+    "color": -2,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

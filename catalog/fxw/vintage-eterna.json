@@ -1,0 +1,33 @@
+{
+  "slug": "vintage-eterna",
+  "name": "Vintage Eterna",
+  "source": "https://fujixweekly.com/2024/02/05/vintage-eterna-fujifilm-x-trans-v-x-trans-iv-x-h1-film-simulation-recipes/",
+  "notes": "Film Simulation: Eterna · Dynamic Range: DR100 · Grain Effect: Strong · Color Chrome Effect: Off or N/A · White Balance: Auto, +2 Red & -5 Blue · Highlight: +3 · Shadow: -1 · Color: +2 · Sharpness: -1 · High ISO NR: -4 · ISO: Auto, up to ISO 6400 · Exposure Compensation: -2/3 to 0 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Vintage Eterna",
+    "film_simulation": "eterna",
+    "dynamic_range": "dr100",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 2,
+      "shift_b": -5
+    },
+    "highlight": 3,
+    "shadow": -1,
+    "color": 2,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

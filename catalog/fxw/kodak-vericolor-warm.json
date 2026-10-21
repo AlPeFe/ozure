@@ -1,0 +1,34 @@
+{
+  "slug": "kodak-vericolor-warm",
+  "name": "Kodak Vericolor Warm",
+  "source": "https://fujixweekly.com/2022/12/12/kodak-vericolor-warm-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Nostalgic Neg · Grain Effect: Weak, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Strong · White Balance: 3000K, +8 Red & -9 Blue · Dynamic Range: DR100 · Highlight: -2 · Shadow: -1 · Color: +2 · Sharpness: -2 · High ISO NR: -4 · Clarity: -2 · ISO: Auto, up to ISO 6400 · Exposure Compensation: 0 to +2/3 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Kodak Vericolor Warm",
+    "film_simulation": "nostalgic_negative",
+    "dynamic_range": "dr100",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 8,
+      "shift_b": -9,
+      "color_temperature": 3000
+    },
+    "highlight": -2,
+    "shadow": -1,
+    "color": 2,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

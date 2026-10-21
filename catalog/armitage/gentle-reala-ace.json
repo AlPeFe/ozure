@@ -1,0 +1,33 @@
+{
+  "slug": "gentle-reala-ace",
+  "name": "Gentle Reala Ace",
+  "source": "https://www.alexarmitage.com/fuji-x100vi-recipes",
+  "notes": "Film Simulation: Reala Ace · Dynamic Range: DR400 · Grain Effect: Weak, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Weak · White Balance: Auto, 0 Red & 0 Blue · Highlight: -1 · Shadow: 0 · Color: 0 · Sharpness: 0 · High ISO NR: -4 · Clarity: 0",
+  "tags": [
+    "imported",
+    "armitage"
+  ],
+  "recipe": {
+    "name": "Gentle Reala Ace",
+    "film_simulation": "reala_ace",
+    "dynamic_range": "dr400",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 0,
+      "shift_b": 0
+    },
+    "highlight": -1,
+    "shadow": 0,
+    "color": 0,
+    "sharpness": 0,
+    "noise_reduction": -4,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "slug": "kodacolor-vr-200",
+  "name": "Kodacolor VR 200",
+  "source": "https://fujixweekly.com/2025/04/16/kodacolor-vr-200-fujifilm-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Chrome · Dynamic Range: DR200 · Grain Effect: Weak, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Weak · White Balance: 3000K, +8 Red & -8 Blue · Highlight: +1.5 · Shadow: +2.5 · Color: -4 · Sharpness: +1 · High ISO NR: -4 · Clarity: -2 · ISO: Auto, up to ISO 6400 · Exposure Compensation: 0 to +2/3 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Kodacolor VR 200",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr200",
+    "grain_effect": "weak_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 8,
+      "shift_b": -8,
+      "color_temperature": 3000
+    },
+    "highlight": 1.5,
+    "shadow": 2.5,
+    "color": -4,
+    "sharpness": 1,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

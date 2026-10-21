@@ -1,0 +1,34 @@
+{
+  "slug": "expired-ecn-2-100t",
+  "name": "Expired ECN-2 100T",
+  "source": "https://fujixweekly.com/2024/02/01/expired-ecn-2-100t-fujifilm-x-trans-iv-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Eterna Bleach Bypass · Dynamic Range: DR400 · Grain Effect: Strong, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Strong- Weak for X-Trans V · White Balance: 6000K, -9 Red & -6 Blue · Highlight: +0.5 · Shadow: -1 · Color: +1 · Sharpness: -3 · High ISO NR: -4 · Clarity: -4 · ISO: Auto, up to ISO 6400 · Exposure Compensation: 0 to +2/3 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Expired ECN-2 100T",
+    "film_simulation": "eterna_bleach_bypass",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": -9,
+      "shift_b": -6,
+      "color_temperature": 6000
+    },
+    "highlight": 0.5,
+    "shadow": -1,
+    "color": 1,
+    "sharpness": -3,
+    "noise_reduction": -4,
+    "clarity": -4,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

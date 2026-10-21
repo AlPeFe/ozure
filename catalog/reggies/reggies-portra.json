@@ -1,0 +1,33 @@
+{
+  "slug": "reggies-portra",
+  "name": "Reggie's Portra",
+  "source": "https://fujixweekly.com/fujifilm-x-trans-v-recipes/",
+  "notes": "Classic Chrome · DR-Auto · H -1 / S -1 · Color +2 · NR -4 · Sharp -2 · Grain Weak Small · CC Strong · FX Blue Weak · WB Auto +2R/-4B",
+  "tags": [
+    "imported",
+    "reggies"
+  ],
+  "recipe": {
+    "name": "Reggie's Portra",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr100",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 2,
+      "shift_b": -4
+    },
+    "highlight": -1,
+    "shadow": -1,
+    "color": 2,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

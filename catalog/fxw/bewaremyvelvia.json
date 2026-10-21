@@ -1,0 +1,34 @@
+{
+  "slug": "bewaremyvelvia",
+  "name": "BewareMyVelvia",
+  "source": "https://fujixweekly.com/2026/01/13/bewaremyvelvia-a-fujifilm-film-simulation-recipe-for-x-trans-iv-v/",
+  "notes": "Film Simulation: Velvia · Dynamic Range: DR200 · Grain Effect: Weak, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Strong · White Balance: 6590K, -9 Red & 0 Blue · Highlight: +2 · Shadow: +2 · Color: +4 · Sharpness: +1 · High ISO NR: -4 · Clarity: 0 · ISO: Auto, up to ISO 6400 · Exposure Compensation: 0 to +2/3 (typically) ·",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "BewareMyVelvia",
+    "film_simulation": "velvia",
+    "dynamic_range": "dr200",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": -9,
+      "shift_b": 0,
+      "color_temperature": 6590
+    },
+    "highlight": 2,
+    "shadow": 2,
+    "color": 4,
+    "sharpness": 1,
+    "noise_reduction": -4,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

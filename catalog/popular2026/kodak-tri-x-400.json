@@ -1,0 +1,33 @@
+{
+  "slug": "kodak-tri-x-400",
+  "name": "Kodak Tri-X 400",
+  "source": "https://fujixweekly.com/2020/06/18/fujifilm-x100v-film-simulation-recipe-kodak-tri-x-400/",
+  "notes": "Film Simulation: Acros (Y/R/G) · Dynamic Range: DR200 · Highlight: 0 · Shadow: +3 · Noise Reduction: -4 · Sharpening: +1 · Clarity: +4 · Grain Effect: Strong, Large · Color Chrome Effect: Strong · Color Chrome Effect Blue: Off · White Balance: Daylight, +9 Red & -9 Blue",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "Kodak Tri-X 400",
+    "film_simulation": "acros",
+    "dynamic_range": "dr200",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "daylight",
+      "shift_r": 9,
+      "shift_b": -9
+    },
+    "highlight": 0,
+    "shadow": 3,
+    "color": 0,
+    "sharpness": 1,
+    "noise_reduction": -4,
+    "clarity": 4,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

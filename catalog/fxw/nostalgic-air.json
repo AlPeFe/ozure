@@ -1,0 +1,33 @@
+{
+  "slug": "nostalgic-air",
+  "name": "Nostalgic Air",
+  "source": "https://fujixweekly.com/2026/04/19/nostalgic-air-a-fujifilm-recipe-for-x-trans-v-cameras/",
+  "notes": "Film Simulation: Nostalgic Neg. · Grain Effect: Strong, Small · Color Chrome Effect: Off · Color Chrome FX Blue: Off · White Balance: Auto, +5 Red & -1 Blue · Dynamic Range: DR-Auto · Highlight: -1 · Shadow: 0 · Color: +4 · Sharpness: -2 · High ISO NR: -4 · Clarity: -3 · ISO: Auto, up to ISO 6400 · Exposure Compensation: +2/3 to +1 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Nostalgic Air",
+    "film_simulation": "nostalgic_negative",
+    "dynamic_range": "dr100",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 5,
+      "shift_b": -1
+    },
+    "highlight": -1,
+    "shadow": 0,
+    "color": 4,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

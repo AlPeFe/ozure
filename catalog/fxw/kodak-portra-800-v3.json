@@ -1,0 +1,34 @@
+{
+  "slug": "kodak-portra-800-v3",
+  "name": "Kodak Portra 800 v3",
+  "source": "https://fujixweekly.com/2024/02/14/kodak-portra-800-v3-fujifilm-x-t5-x-trans-v-x-e4-x-trans-iv-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Chrome · Dynamic Range: DR400 · Grain Effect: Strong, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Off (X-Trans V); Weak (X-Trans IV) · White Balance: 6600K, -1 Red & -3 Blue · Highlight: -2 · Shadow: -0.5 · Color: +3 · Sharpness: -2 · High ISO NR: -4 · Clarity: -3 · ISO: Auto, up to ISO 6400 · Exposure Compensation: +1/3 to +1 1/3 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Kodak Portra 800 v3",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": -1,
+      "shift_b": -3,
+      "color_temperature": 6600
+    },
+    "highlight": -2,
+    "shadow": -0.5,
+    "color": 3,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

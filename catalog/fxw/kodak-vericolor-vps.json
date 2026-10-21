@@ -1,0 +1,34 @@
+{
+  "slug": "kodak-vericolor-vps",
+  "name": "Kodak Vericolor VPS",
+  "source": "https://fujixweekly.com/2025/07/07/kodak-vericolor-vps-fujifilm-x-e5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Nostalgic Neg. · Dynamic Range: DR400 · Grain Effect: Strong, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Strong · White Balance: 4500K, +2 Red & -5 Blue · Highlight: -1 · Shadow: +2 · Color: +3 · Sharpness: -1 · High ISO NR: -4 · Clarity: -2 · ISO: Auto, up to ISO 6400 · Exposure Compensation: +1/3 to +1 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Kodak Vericolor VPS",
+    "film_simulation": "nostalgic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 2,
+      "shift_b": -5,
+      "color_temperature": 4500
+    },
+    "highlight": -1,
+    "shadow": 2,
+    "color": 3,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

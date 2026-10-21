@@ -1,0 +1,34 @@
+{
+  "slug": "after-rain",
+  "name": "After Rain",
+  "source": "https://www.instagram.com/reel/Da1zXNRtm1U/?utm_source=ig_web_button_share_sheet",
+  "notes": "WB: 5200K (R +3, B -4) · DR400 · Grain: Strong Large · CC: Strong · FX Blue: Strong · Color: +4 · Sharpness: -2 · H -0.5 / S +2.0 · NR: -4 · Clarity: 0",
+  "tags": [
+    "imported",
+    "instagram"
+  ],
+  "recipe": {
+    "name": "After Rain",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 3,
+      "shift_b": -4,
+      "color_temperature": 5200
+    },
+    "highlight": -0.5,
+    "shadow": 2,
+    "color": 4,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": 0,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "slug": "fujifilm-negative",
+  "name": "Fujifilm Negative",
+  "source": "https://fujixweekly.com/2024/10/31/fujifilm-negative-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Reala Ace · Grain: Weak Small · Color Chrome: Strong · FX Blue: Off · WB: 5000K (R 0, B -2) · DR400 · Highlight: -1 · Shadow: -0.5 · Color: +2 · Sharpness: -1 · NR: -4 · Clarity: -2",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Fujifilm Negative",
+    "film_simulation": "reala_ace",
+    "dynamic_range": "dr400",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 0,
+      "shift_b": -2,
+      "color_temperature": 5000
+    },
+    "highlight": -1,
+    "shadow": -0.5,
+    "color": 2,
+    "sharpness": -1,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "slug": "vibrant-astia-soft",
+  "name": "Vibrant Astia Soft",
+  "source": "https://www.osan-bilgi.com/vibrant-astia-soft",
+  "notes": "Film Simulation: Astia Soft · Dynamic Range: DR400 · Grain Effect: Strong, Large · Color Chrome Effect: Strong · Color Chrome FX Blue: Weak · White Balance: Auto, -2 Blue & +2 Red · Highlight: -2 · Shadow: +1 · Color: +1 · Sharpness: -2 · High ISO NR: -4 · Clarity: -4",
+  "tags": [
+    "imported",
+    "osan"
+  ],
+  "recipe": {
+    "name": "Vibrant Astia Soft",
+    "film_simulation": "astia",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 2,
+      "shift_b": -2
+    },
+    "highlight": -2,
+    "shadow": 1,
+    "color": 1,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -4,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

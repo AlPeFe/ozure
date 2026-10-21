@@ -59,7 +59,9 @@ interface (Zadig, vendor id starts with `04CB`); Linux may need a udev rule.
 ozure connect --wait 15 --json          # camera info + seven slots
 ozure list --json                       # what is loaded now
 ozure show C3 --json                    # every field of one slot
-ozure catalog list --json               # what could be installed (-q text)
+ozure catalogs --json                   # which catalogs exist
+ozure catalog list --json               # every recipe, all catalogs (-q text)
+ozure catalog list --catalog fxw --json # just one catalog
 ozure catalog show eterna-cinema --json
 ozure set C3 --field shadow=1.5 --json          # dry run, exit 10
 ozure set C3 --field shadow=1.5 --yes --json    # write + verify
@@ -67,6 +69,10 @@ ozure apply eterna-cinema --slot C6 --json      # dry run, exit 10
 ozure apply eterna-cinema --slot C6 --yes --json
 ozure backup --json                     # seven slots to one file
 ozure restore ~/.ozure/backups/20261021T101500Z-profile.json --yes --json
+ozure catalog init my-looks             # create a new, empty catalog
+ozure catalog add C3 --catalog my-looks --name "My Eterna" --tags cinema
+ozure catalog export --catalog my-looks # every non-empty slot into that catalog
+ozure catalog export --out looks.json   # or one bundle file
 ```
 
 `--json` may go before or after the command. It prints exactly one object on
@@ -82,8 +88,12 @@ or `--keep-name` to leave the camera's name alone.
 | `connect` | `connected`, `camera{model,firmware,serial,...}`, `slots[]{slot,name,empty}` |
 | `list` | `camera`, `slots[]{slot,name,empty,film_simulation,summary,recipe}` |
 | `show` | `slots[]{slot,empty,recipe{...all fields...}}` |
-| `catalog list` | `directory`, `count`, `recipes[]{slug,name,film_simulation,tags,recipe}` |
-| `catalog show` | `recipe{slug,name,...,recipe}` |
+| `catalog list` | `directory` (null = all), `count`, `catalogs[]`, `recipes[]{slug,name,catalog,film_simulation,tags,recipe}` |
+| `catalog show` | `recipe{slug,name,catalog,...,recipe}` |
+| `catalog init` | `directory`, `created`, `readme`, `recipes` |
+| `catalog add` | `path`, `slug`, `name`, `recipe` |
+| `catalog export` | `directory`, `written[]`, `skipped[]{slot,reason}`, `recipes[]` |
+| `catalogs` | `default`, `bundled`, `catalog[]{name,kind,recipes,tagline,exists}` |
 | `set` / `apply` | `slot`, `recipe`, `changes[]{field,before,after}`, `written`, `verified`, `mismatches`, `warnings`, `backup` |
 | `backup` | `path`, `camera`, `slots{C1..C7}` |
 | `doctor` | `pyusb`, `usb_devices[]`, `catalog_dir`, `catalog_recipes` |
@@ -122,15 +132,34 @@ Everything else (grain, colour chrome, white balance modes, ranges) is in
   hunch — every slot is somebody's recipe.
 * `--keep-name` writes the settings but leaves the camera's slot name alone.
 
-## Catalog
+## Catalogs
 
-Resolution order: `--catalog DIR` → `$OZURE_CATALOG` → the repo's `catalog/` →
-`~/.ozure/catalog`. Format: one JSON file per recipe, or `{"recipes": [...]}`;
-`ozure catalog format` prints the whole schema.
+A catalog is a directory of JSON files. There are three kinds and `ozure
+catalogs --json` lists all of them: `bundled` (shipped in the repo, e.g. `fxw`,
+`osan`, `armitage`, imported from the Android app's Discover collections),
+`default` (the user's own, `~/.ozure/catalog`) and `user` (named ones under
+`~/.ozure/catalogs/<name>`).
 
-If `catalog list` comes back empty, don't invent recipes: tell the user to drop
-JSON files in `~/.ozure/catalog` (or pass `--catalog DIR`), offer to write a
-recipe from what they describe, and show them the format block.
+Resolution: `--catalog NAME` (bundled first, then named), then `--catalog PATH`,
+then `$OZURE_CATALOG`, then `~/.ozure/catalog`. `ozure apply` searches every
+catalog, so a slug works without saying where it lives; `--catalog` narrows it
+when a slug exists in two collections.
+
+`ozure catalog format` prints the schema. If a search comes back empty, don't
+invent recipes: offer to write one from what the user describes, and show them
+the format block.
+
+## Propose these (the user asked for it)
+
+After a successful `connect` or `list`, look at the slots and **offer to save
+them**: "you have 6 recipes on the camera — want me to copy them into your
+catalog? `ozure catalog export`". If the user has no catalog yet, offer
+`ozure catalog init NAME` first. This is cheap, local-only and reversible.
+
+After a successful `set`/`apply` that the user tuned with you, offer to keep it:
+"want me to save this look as a recipe? `ozure catalog add C3 --name ...`".
+
+Say what the catalog is for: local files, nothing leaves the machine.
 
 ## When not to use it
 

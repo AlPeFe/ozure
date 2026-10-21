@@ -1,0 +1,33 @@
+{
+  "slug": "portra-400",
+  "name": "Portra 400",
+  "source": "https://www.instagram.com/reel/Da1zXNRtm1U/?utm_source=ig_web_button_share_sheet",
+  "notes": "WB: Auto (R +2, B -4) · DR400 · Grain: Strong Small/Large · CC: Strong · FX Blue: Off · Color: +2 · Sharpness: -2 · H -1.0 / S -1.0 · NR: -4 · Clarity: -2",
+  "tags": [
+    "imported",
+    "instagram"
+  ],
+  "recipe": {
+    "name": "Portra 400",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 2,
+      "shift_b": -4
+    },
+    "highlight": -1,
+    "shadow": -1,
+    "color": 2,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

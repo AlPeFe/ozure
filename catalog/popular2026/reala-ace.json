@@ -1,0 +1,33 @@
+{
+  "slug": "reala-ace",
+  "name": "Reala Ace",
+  "source": "https://fujixweekly.com/2023/09/15/reala-ace-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Negative · Grain Effect: Weak Small · Color Chrome: Strong · FX Blue: Strong · WB: Auto (R -1, B +1) · DR400 · Highlight: -1.5 · Shadow: -2 · Color: +2 · Sharpness: 0 · NR: -4 · Clarity: -2",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "Reala Ace",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": -1,
+      "shift_b": 1
+    },
+    "highlight": -1.5,
+    "shadow": -2,
+    "color": 2,
+    "sharpness": 0,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

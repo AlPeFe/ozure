@@ -1,0 +1,33 @@
+{
+  "slug": "classic-retro",
+  "name": "Classic Retro",
+  "source": "https://fujixweekly.com/2026/07/11/classic-retro-a-fujifilm-recipe-for-fifth-generation-cameras/",
+  "notes": "Film Simulation: Classic Negative · Grain Effect: Strong, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Strong · White Balance: Daylight, 0 Red & -3 Blue · Dynamic Range: DR400 · Highlight: +4 · Shadow: -2 · Color: -1 · Sharpness: -2 · High ISO NR: -4 · Clarity: +2 · ISO: Auto, up to ISO 6400 · Exposure Compensation: -2/3 to -1 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Classic Retro",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "strong",
+    "white_balance": {
+      "mode": "daylight",
+      "shift_r": 0,
+      "shift_b": -3
+    },
+    "highlight": 4,
+    "shadow": -2,
+    "color": -1,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": 2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

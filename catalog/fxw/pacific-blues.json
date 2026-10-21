@@ -1,0 +1,34 @@
+{
+  "slug": "pacific-blues",
+  "name": "Pacific Blues",
+  "source": "https://fujixweekly.com/2022/12/06/pacific-blues-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Negative · Grain: Strong Large · Color Chrome: Strong · FX Blue: Weak · WB: 5800K (R +1, B -3) · DR400 · Highlight: -2 · Shadow: +3 · Color: +4 · Sharpness: -2 · NR: -4 · Clarity: -3",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Pacific Blues",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 1,
+      "shift_b": -3,
+      "color_temperature": 5800
+    },
+    "highlight": -2,
+    "shadow": 3,
+    "color": 4,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "slug": "eddys-point-shoot",
+  "name": "EDDY'S POINT & SHOOT",
+  "source": "",
+  "notes": "Film Sim: Classic Negative · Grain: Strong Large · Colour Chrome: Off · FX Blue: Weak · WB: Auto (R +4, B -4) · Dynamic Range: 200 · Tone Curve: H +1 / S 0 · Colour: +3 · Sharpness: -4 · NR: -4 · Clarity: 0 · Usa Tiffen Black Pro Mist 1/8 (si no, Clarity -3) · Suele sobreexponer +1",
+  "tags": [
+    "imported",
+    "eddy"
+  ],
+  "recipe": {
+    "name": "EDDY'S POINT & SHOOT",
+    "film_simulation": "classic_negative",
+    "dynamic_range": "dr200",
+    "grain_effect": "strong_large",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "weak",
+    "white_balance": {
+      "mode": "auto",
+      "shift_r": 4,
+      "shift_b": -4
+    },
+    "highlight": 1,
+    "shadow": 0,
+    "color": 3,
+    "sharpness": -4,
+    "noise_reduction": -4,
+    "clarity": 1,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

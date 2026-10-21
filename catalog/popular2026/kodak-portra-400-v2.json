@@ -1,0 +1,34 @@
+{
+  "slug": "kodak-portra-400-v2",
+  "name": "Kodak Portra 400 v2",
+  "source": "https://fujixweekly.com/2022/12/16/kodak-portra-400-v2-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Chrome · Grain Effect: Strong, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Off · White Balance: 5200K, +1 Red & -6 Blue · Dynamic Range: DR400 · Highlight: 0 · Shadow: -2 · Color: +2 · Sharpness: -2 · High ISO NR: -4 · Clarity: -2",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "Kodak Portra 400 v2",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr400",
+    "grain_effect": "strong_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "color_temperature",
+      "shift_r": 1,
+      "shift_b": -6,
+      "color_temperature": 5200
+    },
+    "highlight": 0,
+    "shadow": -2,
+    "color": 2,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

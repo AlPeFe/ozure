@@ -1,0 +1,33 @@
+{
+  "slug": "kodachrome-64-x-trans-v",
+  "name": "Kodachrome 64 (X-Trans V)",
+  "source": "https://fujixweekly.com/2022/11/28/kodachrome-64-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Classic Chrome · Grain Effect: Weak, Small · Color Chrome Effect: Strong · Color Chrome FX Blue: Off · White Balance: Daylight, +2 Red & -5 Blue · Dynamic Range: DR200 · Highlight: 0 · Shadow: +0.5 · Color: +2 · Sharpness: +1 · High ISO NR: -4 · Clarity: +3",
+  "tags": [
+    "imported",
+    "popular2026"
+  ],
+  "recipe": {
+    "name": "Kodachrome 64 (X-Trans V)",
+    "film_simulation": "classic_chrome",
+    "dynamic_range": "dr200",
+    "grain_effect": "weak_small",
+    "smooth_skin": "off",
+    "color_chrome": "strong",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "daylight",
+      "shift_r": 2,
+      "shift_b": -5
+    },
+    "highlight": 0,
+    "shadow": 0.5,
+    "color": 2,
+    "sharpness": 1,
+    "noise_reduction": -4,
+    "clarity": 3,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}

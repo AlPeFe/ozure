@@ -1,0 +1,33 @@
+{
+  "slug": "vintage-bronze",
+  "name": "Vintage Bronze",
+  "source": "https://fujixweekly.com/2023/01/13/vintage-bronze-fujifilm-x-t5-x-trans-v-film-simulation-recipe/",
+  "notes": "Film Simulation: Eterna Bleach Bypass · Grain Effect: Weak, Large · Color Chrome Effect: Off · Color Chrome FX Blue: Off · White Balance: Daylight, +6 Red & -8 Blue · Dynamic Range: DR200 · Highlight: 0 · Shadow: -1 · Color: 0 · Sharpness: -2 · High ISO NR: -4 · Clarity: -2 · ISO: Auto, up to ISO 6400 · Exposure Compensation: -2/3 to 0 (typically)",
+  "tags": [
+    "imported",
+    "fxw"
+  ],
+  "recipe": {
+    "name": "Vintage Bronze",
+    "film_simulation": "eterna_bleach_bypass",
+    "dynamic_range": "dr200",
+    "grain_effect": "weak_large",
+    "smooth_skin": "off",
+    "color_chrome": "off",
+    "color_chrome_fx_blue": "off",
+    "white_balance": {
+      "mode": "daylight",
+      "shift_r": 6,
+      "shift_b": -8
+    },
+    "highlight": 0,
+    "shadow": -1,
+    "color": 0,
+    "sharpness": -2,
+    "noise_reduction": -4,
+    "clarity": -2,
+    "dynamic_range_priority": 0,
+    "monochrome_wc": 0,
+    "monochrome_mg": 0
+  }
+}
