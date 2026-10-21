@@ -46,7 +46,7 @@ FONT = ImageFont.truetype("C:/Windows/Fonts/consola.ttf", FONT_SIZE)
 FONT_BOLD = ImageFont.truetype("C:/Windows/Fonts/consolab.ttf", FONT_SIZE)
 FONT_SMALL = ImageFont.truetype("C:/Windows/Fonts/segoeui.ttf", 13)
 
-LOGO = ROOT / "assets" / "logo.png"
+LOGO = ROOT / "assets" / "wordmark.png"
 
 STEPS = [
     "connect",

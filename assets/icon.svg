@@ -1,8 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="ozure">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="ozure">
   <title>ozure</title>
   <rect width="512" height="512" rx="115" fill="#f2a3b6"/>
-  <g transform="translate(77.3 408.9) scale(0.5793)">
-    <path fill="#fff9f7" d="M574.0 -263Q574.0 -183 539.0 -121.5Q504.0 -60 444.0 -25.0Q384.0 10 309.0 10Q234.0 10 174.0 -25.0Q114.0 -60 78.5 -121.5Q43.0 -183 43.0 -263Q43.0 -344 78.5 -405.5Q114.0 -467 174.0 -502.5Q234.0 -538 309.0 -538Q384.0 -538 444.0 -502.5Q504.0 -467 539.0 -405.5Q574.0 -344 574.0 -263ZM474.0 -263Q474.0 -318 452.0 -358.5Q430.0 -399 392.5 -422.5Q355.0 -446 309.0 -446Q263.0 -446 225.0 -422.5Q187.0 -399 165.0 -358.5Q143.0 -318 143.0 -263Q143.0 -210 165.0 -169.0Q187.0 -128 225.0 -105.0Q263.0 -82 309.0 -82Q355.0 -82 392.5 -105.0Q430.0 -128 452.0 -169.0Q474.0 -210 474.0 -263Z"/>
+  <g transform="translate(0.00 18.00) scale(1.0000)">
+  <rect x="96" y="120" width="320" height="272" rx="58" fill="#fff9f7"/>
+  <rect x="190" y="84" width="132" height="48" rx="20" fill="#fce4ea"/>
+  <rect x="338" y="96" width="44" height="18" rx="9" fill="#fce4ea"/>
+  <circle cx="206" cy="262" r="68" fill="#f2a3b6"/>
+  <circle cx="206" cy="262" r="50" fill="#fce4ea"/>
+  <circle cx="228" cy="238" r="12" fill="#ffffff"/>
+  <circle cx="298" cy="244" r="9" fill="#2c2f38"/>
+  <circle cx="346" cy="244" r="9" fill="#2c2f38"/>
+  <path d="M 300 268 Q 322 292 344 268" fill="none" stroke="#2c2f38" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="288" cy="300" r="11" fill="#f2a3b6"/>
+  <circle cx="366" cy="300" r="11" fill="#f2a3b6"/>
+  <polygon points="448.0,125.0 451.4,136.6 463.0,140.0 451.4,143.4 448.0,155.0 444.6,143.4 433.0,140.0 444.6,136.6" fill="#fff9f7"/>
+  <polygon points="470.0,187.0 472.0,194.0 479.0,196.0 472.0,198.0 470.0,205.0 468.0,198.0 461.0,196.0 468.0,194.0" fill="#fff9f7"/>
   </g>
-  <circle cx="256.0" cy="256.0" r="45.2" fill="#fff9f7"/>
 </svg>

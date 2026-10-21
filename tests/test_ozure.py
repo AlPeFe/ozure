@@ -10,7 +10,7 @@ from pathlib import Path
 
 from ozure import cli
 from ozure.catalog import load_catalog, repo_catalog_dir
-from ozure.errors import InvalidRecipe
+from ozure.errors import InvalidRecipe, ProtocolError
 from ozure.fuji import FujiPtp
 from ozure.mockcam import MockCameraTransport, props_from_recipe, state_from_recipes
 from ozure.recipe import Recipe, dial, ptp_name, ptp_name_bytes, recipe_from_props
@@ -39,9 +39,13 @@ def sample_recipe(**overrides) -> Recipe:
     return Recipe.from_dict(data)
 
 
-def camera(recipes: list[Recipe] | None = None) -> tuple[FujiPtp, MockCameraTransport]:
+def camera(
+    recipes: list[Recipe] | None = None, *, missing_props: list[int] | None = None
+) -> tuple[FujiPtp, MockCameraTransport]:
     recipes = recipes or [sample_recipe(name=f"C{i + 1}") for i in range(7)]
-    transport = MockCameraTransport(state_from_recipes("X100VI", recipes))
+    transport = MockCameraTransport(
+        state_from_recipes("X100VI", recipes, missing_props=missing_props)
+    )
     fuji = FujiPtp(transport)
     fuji.open()
     return fuji, transport
@@ -115,6 +119,38 @@ class CameraTests(unittest.TestCase):
         self.assertNotIn(0xD197, written)
         fuji.close()
 
+    def test_empty_slot_reads_as_empty(self):
+        recipes = [sample_recipe(name=f"C{i + 1}") for i in range(6)]
+        recipes.append(Recipe(name="", empty=True))
+        fuji, _transport = camera(recipes)
+        self.assertTrue(fuji.read_slot(7).empty)
+        fuji.close()
+
+    def test_write_into_an_empty_slot_keeps_every_value(self):
+        recipes = [sample_recipe(name=f"C{i + 1}") for i in range(6)]
+        recipes.append(Recipe(name="", empty=True))
+        fuji, _transport = camera(recipes)
+        recipe = sample_recipe(name="First one")
+        self.assertEqual(fuji.write_recipe(7, recipe), [])
+        self.assertEqual(fuji.read_slot(7).to_dict(), recipe.to_dict())
+        fuji.close()
+
+    def test_empty_recipe_is_never_written(self):
+        fuji, _transport = camera()
+        with self.assertRaises(ProtocolError):
+            fuji.write_recipe(3, Recipe(name="", empty=True))
+        fuji.close()
+
+    def test_unsupported_clarity_degrades_to_a_warning(self):
+        # Older bodies have no clarity property at all.
+        fuji, _transport = camera(missing_props=[0xD1A2])
+        recipe = fuji.read_slot(1)
+        self.assertEqual(recipe.clarity, 0)
+        self.assertTrue(any("clarity" in warning for warning in recipe.warnings))
+        warnings = fuji.write_recipe(1, sample_recipe(clarity=2.0), write_name=False)
+        self.assertTrue(any("clarity" in warning for warning in warnings))
+        fuji.close()
+
     def test_identity_is_reported(self):
         fuji, _transport = camera()
         self.assertEqual(fuji.camera["model"], "X100VI")
@@ -125,6 +161,65 @@ class CameraTests(unittest.TestCase):
         fuji.write_recipe(2, sample_recipe(name="ignored"), write_name=False)
         self.assertEqual(fuji.read_slot(2).name, "C2")
         fuji.close()
+
+
+class RecipeFieldTests(unittest.TestCase):
+    """Every field of the C1-C7 block must be reachable and honest."""
+
+    WIRE_FIELDS = (
+        "film_simulation",
+        "dynamic_range",
+        "dynamic_range_priority",
+        "grain_effect",
+        "smooth_skin",
+        "color_chrome",
+        "color_chrome_fx_blue",
+        "white_balance",
+        "highlight",
+        "shadow",
+        "color",
+        "sharpness",
+        "noise_reduction",
+        "clarity",
+        "monochrome_wc",
+        "monochrome_mg",
+    )
+
+    def test_every_wire_field_is_in_the_model_and_the_output(self):
+        recipe = sample_recipe()
+        data = recipe.to_dict()
+        for field in self.WIRE_FIELDS:
+            self.assertIn(field, data)
+        # white_balance expands to four words (mode, shift R, shift B, Kelvin),
+        # so the fields above account for exactly the 19 property words.
+        self.assertEqual(len(self.WIRE_FIELDS) - 1 + 4, 19)
+
+    def test_exposure_is_not_part_of_the_recipe_block(self):
+        self.assertNotIn("exposure", sample_recipe().to_dict())
+        with self.assertRaises(InvalidRecipe):
+            Recipe.from_dict({"exposure": 0.5})
+
+    def test_integers_are_not_silently_rounded(self):
+        with self.assertRaises(InvalidRecipe):
+            Recipe.from_dict({"noise_reduction": 1.5})
+        with self.assertRaises(InvalidRecipe):
+            Recipe.from_dict({"dynamic_range_priority": 1.5})
+
+    def test_long_names_are_rejected_before_the_camera(self):
+        with self.assertRaises(InvalidRecipe):
+            Recipe.from_dict({"name": "x" * 255})
+
+    def test_dynamic_range_is_a_warning_when_priority_is_pinned(self):
+        recipe = Recipe.from_dict({"dynamic_range": "dr200", "dynamic_range_priority": 2})
+        self.assertTrue(any("dynamic_range is ignored" in w for w in recipe.warnings))
+
+    def test_unset_monochrome_words_decode_as_zero(self):
+        recipe = sample_recipe()
+        props = props_from_recipe(recipe)
+        props[3] = props[4] = 0xFFFF
+        decoded = recipe_from_props(recipe.name, props)
+        self.assertEqual(decoded.monochrome_wc, 0)
+        self.assertEqual(decoded.monochrome_mg, 0)
 
 
 class CatalogTests(unittest.TestCase):
@@ -216,6 +311,70 @@ class CliTests(unittest.TestCase):
         payload = json.loads(target.read_text(encoding="utf-8"))
         self.assertEqual(len(payload["slots"]), 7)
         self.assertEqual(cli.main(["restore", str(target), "--yes", "--mock", "--json"]), 0)
+
+    def test_apply_into_an_empty_slot_works(self):
+        import json as _json
+
+        from ozure.mockcam import state_from_recipes  # noqa: F401  (documented source of the file)
+
+        cli.main(["connect", "--mock", "--json"])
+        state_path = self.home / "mock-camera.json"
+        state = _json.loads(state_path.read_text(encoding="utf-8"))
+        state["slots"][6] = {"name": "", "props": [0xFFFF] * 19, "empty": True}
+        state_path.write_text(_json.dumps(state), encoding="utf-8")
+        code = cli.main(
+            ["apply", "eterna-cinema", "--slot", "C7", "--yes", "--no-backup", "--mock", "--json"]
+        )
+        self.assertEqual(code, 0)
+        state = _json.loads(state_path.read_text(encoding="utf-8"))
+        self.assertEqual(state["slots"][6]["name"], "Eterna Cinema")
+        self.assertNotEqual(state["slots"][6]["props"][0], 0xFFFF)
+
+    def test_set_covers_dynamic_range_priority_and_white_balance(self):
+        import json as _json
+
+        cli.main(["connect", "--mock", "--json"])
+        code = cli.main(
+            [
+                "set",
+                "C2",
+                "--dynamic-range-priority",
+                "dr200",
+                "--wb-mode",
+                "shade",
+                "--wb-shift-b",
+                "-3",
+                "--yes",
+                "--no-backup",
+                "--mock",
+                "--json",
+            ]
+        )
+        self.assertEqual(code, 0)
+        props = _json.loads((self.home / "mock-camera.json").read_text(encoding="utf-8"))["slots"][
+            1
+        ]["props"]
+        self.assertEqual(props[1], 2)  # DR priority
+        self.assertEqual(props[9], 0x8006)  # shade
+        self.assertEqual(props[11], -3 & 0xFFFF)
+
+    def test_restore_skips_empty_slots(self):
+        cli.main(["connect", "--mock", "--json"])
+        import json as _json
+
+        backup = self.home / "bk.json"
+        backup.write_text(
+            _json.dumps({"slots": {"C1": {"name": "Restored"}, "C7": {"name": "", "empty": True}}}),
+            encoding="utf-8",
+        )
+        code = cli.main(["restore", str(backup), "--yes", "--mock", "--json"])
+        self.assertEqual(code, 0)
+        state = _json.loads((self.home / "mock-camera.json").read_text(encoding="utf-8"))
+        self.assertEqual(state["slots"][0]["name"], "Restored")
+        # C7 was recorded as empty in the backup, so it must be left alone
+        # instead of being filled with defaults.
+        self.assertNotEqual(state["slots"][6]["name"], "")
+        self.assertNotEqual(state["slots"][6]["props"][0], 0xFFFF)
 
     def test_unknown_catalog_recipe_is_an_error(self):
         cli.main(["connect", "--mock", "--json"])

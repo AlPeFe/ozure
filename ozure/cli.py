@@ -27,7 +27,7 @@ from .catalog import CatalogRecipe, find, load_catalog, resolve_catalog_dir
 from .errors import DryRun, OzureError, UsageError
 from .fuji import FujiPtp
 from .mockcam import MockCameraTransport, create_transport, save_state, state_from_recipes
-from .recipe import MONO_FILM_SIMULATIONS, Recipe, parse_slot, slot_name
+from .recipe import DR_PRIORITIES, MONO_FILM_SIMULATIONS, Recipe, parse_slot, slot_name
 from .transport import UsbTransport
 
 JSON_SCHEMA_VERSION = 1
@@ -421,11 +421,17 @@ def diff_recipes(before: Recipe, after: Recipe) -> list[tuple[str, Any, Any]]:
     right = after.to_dict()
     changes: list[tuple[str, Any, Any]] = []
     for key in left:
-        if key == "name":
+        if key in {"name", "empty"}:
             continue
-        lv, rv = left[key], right[key]
+        # An empty slot only carries {name, empty}, so every other key is
+        # missing on one side; compare with .get() instead of indexing.
+        lv, rv = left[key], right.get(key)
         if lv != rv:
             changes.append((key, _flatten(lv), _flatten(rv)))
+    for key in right:
+        if key in left or key in {"name", "empty"}:
+            continue
+        changes.append((key, "—", _flatten(right[key])))
     if after.name and before.name != after.name:
         changes.insert(0, ("name", before.name or "—", after.name))
     return changes
@@ -492,10 +498,17 @@ def _write_and_verify(
 ) -> None:
     if not args.no_backup:
         out.set(backup=str(save_backup(slot, fuji.read_slot(slot))))
-    fuji.write_recipe(slot, recipe, write_name=write_name)
+    warnings = fuji.write_recipe(slot, recipe, write_name=write_name)
     verified = fuji.read_slot(slot)
     mismatches = _verify(recipe, verified, compare_name=write_name)
-    out.set(verified=verified.to_dict(), written=True, mismatches=mismatches)
+    for warning in warnings:
+        ui.warn(warning)
+    out.set(
+        verified=verified.to_dict(),
+        written=True,
+        mismatches=mismatches,
+        warnings=warnings + [f"{slot_name(slot)}: {w}" for w in verified.warnings],
+    )
     if not args.json:
         ui.ok(f"wrote {slot_name(slot)}")
         if mismatches:
@@ -513,17 +526,37 @@ def cmd_set(args: argparse.Namespace, out: Output) -> None:
         key, value = raw.split("=", 1)
         overrides[key.strip()] = _coerce(value.strip())
     overrides.update({k: v for k, v in vars(args).items() if k in RECIPE_FIELDS and v is not None})
+    if args.dynamic_range_priority is not None:
+        overrides["dynamic_range_priority"] = DR_PRIORITIES[args.dynamic_range_priority]
     if args.name is not None:
         overrides["name"] = args.name
-    if not overrides:
+    wb_overrides = {
+        key: getattr(args, key)
+        for key in ("wb_mode", "wb_shift_r", "wb_shift_b", "wb_temperature")
+        if getattr(args, key) is not None
+    }
+    if not overrides and not wb_overrides:
         raise UsageError("nothing to change", hint="pass --field key=value or a named flag")
     if "name" in overrides and args.name is None:
         args.name = str(overrides["name"])
 
     with camera(args) as (fuji, _transport):
         before = fuji.read_slot(slot)
+        if before.empty:
+            ui.warn(f"{slot_name(slot)} is empty; the recipe starts from defaults")
         merged = before.to_dict()
-        merged.pop("empty", None) if before.empty else None
+        merged.pop("empty", None)
+        if wb_overrides:
+            white_balance = dict(merged.get("white_balance") or {})
+            if "wb_mode" in wb_overrides:
+                white_balance["mode"] = wb_overrides["wb_mode"]
+            if "wb_shift_r" in wb_overrides:
+                white_balance["shift_r"] = wb_overrides["wb_shift_r"]
+            if "wb_shift_b" in wb_overrides:
+                white_balance["shift_b"] = wb_overrides["wb_shift_b"]
+            if "wb_temperature" in wb_overrides:
+                white_balance["color_temperature"] = wb_overrides["wb_temperature"]
+            merged["white_balance"] = white_balance
         merged.update(overrides)
         after = Recipe.from_dict(merged)
         for warning in after.warnings:
@@ -674,11 +707,18 @@ def cmd_restore(args: argparse.Namespace, out: Output) -> None:
     slots = payload.get("slots") or {}
     if not slots:
         raise UsageError(f"{source.name} has no slots")
-    plan: dict[str, Any] = {"source": str(source), "slots": []}
+
+    plan: dict[str, Any] = {"source": str(source), "slots": [], "skipped": []}
+    skipped: list[int] = []
     with camera(args) as (fuji, _transport):
         for slot_text, data in slots.items():
             slot = parse_slot(slot_text)
             recipe = Recipe.from_dict(data)
+            if recipe.empty and not args.include_empty:
+                # An empty slot cannot be re-created as empty: writing the
+                # defaults would invent a recipe the user never chose.
+                plan["skipped"].append(slot_name(slot))
+                continue
             before = fuji.read_slot(slot)
             plan["slots"].append(
                 {
@@ -687,6 +727,14 @@ def cmd_restore(args: argparse.Namespace, out: Output) -> None:
                     "changes": len(diff_recipes(before, recipe)),
                 }
             )
+
+        if not args.json and plan["skipped"]:
+            ui.warn(
+                "skipped empty slot(s): "
+                + ", ".join(plan["skipped"])
+                + " (use --include-empty to write defaults)"
+            )
+
         if not args.yes:
             out.set(**plan, written=False)
             if not args.json:
@@ -695,12 +743,16 @@ def cmd_restore(args: argparse.Namespace, out: Output) -> None:
                 print()
                 print(ui.paint("dry run — re-run with --yes to write to the camera", ui.YELLOW))
             raise DryRun("dry run: nothing was written")
+
         for slot_text, data in slots.items():
             slot = parse_slot(slot_text)
             recipe = Recipe.from_dict(data)
+            if recipe.empty and not args.include_empty:
+                continue
             if not args.no_backup:
                 save_backup(slot, fuji.read_slot(slot))
             fuji.write_recipe(slot, recipe)
+            skipped.append(slot)
         verified = fuji.read_profile()
         out.set(
             **plan,
@@ -708,7 +760,7 @@ def cmd_restore(args: argparse.Namespace, out: Output) -> None:
             verified={slot_name(i + 1): r.to_dict() for i, r in enumerate(verified)},
         )
         if not args.json:
-            ui.ok(f"restored {len(slots)} slot(s) from {source.name}")
+            ui.ok(f"restored {len(skipped)} slot(s) from {source.name}")
     out.finish()
 
 
@@ -879,6 +931,22 @@ def build_parser() -> argparse.ArgumentParser:
     setter.add_argument("--sharpness", type=float)
     setter.add_argument("--clarity", type=float)
     setter.add_argument("--noise-reduction", dest="noise_reduction", type=int)
+    setter.add_argument(
+        "--dynamic-range-priority",
+        dest="dynamic_range_priority",
+        choices=["auto", "dr100", "dr200", "dr400"],
+        help="let the camera pick the DR (auto) or pin it (dr100/dr200/dr400)",
+    )
+    setter.add_argument(
+        "--monochrome-wc", dest="monochrome_wc", type=float, help="-9..+9, mono only"
+    )
+    setter.add_argument(
+        "--monochrome-mg", dest="monochrome_mg", type=float, help="-9..+9, mono only"
+    )
+    setter.add_argument("--wb-mode", dest="wb_mode", help="auto|daylight|shade|...")
+    setter.add_argument("--wb-shift-r", dest="wb_shift_r", type=int, help="-9..+9")
+    setter.add_argument("--wb-shift-b", dest="wb_shift_b", type=int, help="-9..+9")
+    setter.add_argument("--wb-temperature", dest="wb_temperature", type=int, help="Kelvin")
     setter.add_argument("--yes", action="store_true", help="actually write to the camera")
     setter.add_argument("--no-backup", action="store_true", help="skip the pre-write backup")
     CameraArgs.add(setter)
@@ -905,6 +973,11 @@ def build_parser() -> argparse.ArgumentParser:
     restore.add_argument("file", help="backup JSON produced by `ozure backup`")
     restore.add_argument("--yes", action="store_true", help="actually write to the camera")
     restore.add_argument("--no-backup", action="store_true", help="skip the pre-write backup")
+    restore.add_argument(
+        "--include-empty",
+        action="store_true",
+        help="also write defaults into slots the backup recorded as empty",
+    )
     CameraArgs.add(restore)
     restore.set_defaults(func=cmd_restore)
 

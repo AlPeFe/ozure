@@ -89,5 +89,9 @@ representable (`"empty": true`) and never sends `0xFFFF`.
   on monochrome simulations, so they are skipped instead of sent.
 * "Mono WC"/"Mono MG" are rejected when a colour simulation is active, for the
   same reason — they are only written for monochrome.
-* Some bodies do not expose every property; a failure on a known-optional
-  property is recorded as a warning instead of aborting the slot.
+* Some bodies do not expose every property. Clarity (`0xD1A2`), the Kelvin word
+  (`0xD19C`) and the monochrome words (`0xD193`, `0xD194`) are treated as
+  optional: a failed read becomes `0` plus a warning, and a refused write becomes
+  a warning so the rest of the recipe still lands.
+* The block is complete as documented: the slot name plus 19 words. `exposure`
+  in `fuji-ptp-core`'s DTO has no wire property and is rejected locally.

@@ -268,10 +268,10 @@ class Recipe:
             wb_data = {"mode": wb_data}
         wb = WhiteBalance(
             mode=wb_data.get("mode", "auto"),
-            shift_r=int(wb_data.get("shift_r", 0)),
-            shift_b=int(wb_data.get("shift_b", 0)),
+            shift_r=_int(wb_data.get("shift_r", 0), "white_balance.shift_r"),
+            shift_b=_int(wb_data.get("shift_b", 0), "white_balance.shift_b"),
             color_temperature=(
-                int(wb_data["color_temperature"])
+                _int(wb_data["color_temperature"], "white_balance.color_temperature")
                 if wb_data.get("color_temperature") is not None
                 else None
             ),
@@ -289,10 +289,12 @@ class Recipe:
             shadow=_num(data.get("shadow", 0), "shadow"),
             color=_num(data.get("color", 0), "color"),
             sharpness=_num(data.get("sharpness", 0), "sharpness"),
-            noise_reduction=int(_num(data.get("noise_reduction", 0), "noise_reduction")),
+            noise_reduction=_int(data.get("noise_reduction", 0), "noise_reduction"),
             clarity=_num(data.get("clarity", 0), "clarity"),
             exposure=_num(data.get("exposure", 0), "exposure"),
-            dynamic_range_priority=int(data.get("dynamic_range_priority", 0)),
+            dynamic_range_priority=_int(
+                data.get("dynamic_range_priority", 0), "dynamic_range_priority"
+            ),
             monochrome_wc=_num(data.get("monochrome_wc", 0), "monochrome_wc"),
             monochrome_mg=_num(data.get("monochrome_mg", 0), "monochrome_mg"),
             empty=bool(data.get("empty", False)),
@@ -318,6 +320,15 @@ class Recipe:
 
     def validate(self) -> None:
         """Hard limits from the wire format, plus soft ranges as warnings."""
+        if len(self.name.encode("utf-16-le")) // 2 > 254:
+            raise InvalidRecipe("recipe name is longer than 254 characters")
+        if chr(0) in self.name:
+            raise InvalidRecipe("recipe name cannot contain a NUL character")
+        if self.exposure:
+            raise InvalidRecipe(
+                "exposure is not part of the C1-C7 recipe block",
+                hint="the camera has no exposure property in this block; use the dial",
+            )
         if self.white_balance.mode == "color_temperature":
             if self.white_balance.color_temperature is None:
                 raise InvalidRecipe(
@@ -343,6 +354,10 @@ class Recipe:
                 "dynamic_range_priority must be one of 0 (auto), 1 (DR100), "
                 "2 (DR200), 32768 (DR400)"
             )
+        if self.dynamic_range_priority != 0 and not any(
+            "dynamic_range is ignored" in warning for warning in self.warnings
+        ):
+            self.warnings.append("dynamic_range is ignored while dynamic_range_priority is set")
 
         # Real dials end at these values on every body we know about. Beyond
         # them the camera rejects the write, so refuse locally instead.
@@ -393,7 +408,6 @@ class Recipe:
             "sharpness": _pretty_number(self.sharpness),
             "noise_reduction": self.noise_reduction,
             "clarity": _pretty_number(self.clarity),
-            "exposure": _pretty_number(self.exposure),
             "dynamic_range_priority": self.dynamic_range_priority,
             "monochrome_wc": _pretty_number(self.monochrome_wc),
             "monochrome_mg": _pretty_number(self.monochrome_mg),
@@ -422,6 +436,14 @@ def _num(value: Any, label: str) -> float:
         return float(value)
     except (TypeError, ValueError) as exc:
         raise InvalidRecipe(f"{label} must be a number, got {value!r}") from exc
+
+
+def _int(value: Any, label: str) -> int:
+    """Integers only: 2 is fine, 2.5 is a typo we refuse to round silently."""
+    number = _num(value, label)
+    if number != int(number):
+        raise InvalidRecipe(f"{label} must be a whole number, got {value!r}")
+    return int(number)
 
 
 def _pretty_number(value: float) -> float | int:
@@ -516,13 +538,18 @@ def recipe_from_props(name: str, props: list[int]) -> Recipe:
     if props[17] not in NR_FROM_WIRE:
         raise InvalidRecipe(f"high ISO NR has an unknown value 0x{props[17]:04X}")
 
+    def mono_word(value: int) -> float:
+        # 0xFFFF means "never written": bodies leave the monochrome words
+        # untouched on colour simulations. Do not surface -0.1 for that.
+        return 0.0 if value == 0xFFFF else from_dial(signed(value))
+
     recipe = Recipe(
         name=name,
         dynamic_range=enum(DR_FROM_WIRE, props[0], "dynamic range"),
         dynamic_range_priority=props[1],
         film_simulation=enum(FILM_FROM_WIRE, props[2], "film simulation"),
-        monochrome_wc=from_dial(signed(props[3])),
-        monochrome_mg=from_dial(signed(props[4])),
+        monochrome_wc=mono_word(props[3]),
+        monochrome_mg=mono_word(props[4]),
         grain_effect=enum(GRAIN_FROM_WIRE, props[5], "grain effect"),
         color_chrome=enum(STRENGTH_FROM_WIRE, props[6], "color chrome"),
         color_chrome_fx_blue=enum(STRENGTH_FROM_WIRE, props[7], "color chrome fx blue"),

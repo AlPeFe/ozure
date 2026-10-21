@@ -75,7 +75,9 @@ def props_from_recipe(recipe: Recipe) -> list[int]:
     return values
 
 
-def state_from_recipes(model: str, recipes: list[Recipe], **meta: Any) -> dict[str, Any]:
+def state_from_recipes(
+    model: str, recipes: list[Recipe], *, missing_props: list[int] | None = None, **meta: Any
+) -> dict[str, Any]:
     if len(recipes) != 7:
         raise ValueError("a Fujifilm body always has seven custom slots")
     return {
@@ -84,6 +86,7 @@ def state_from_recipes(model: str, recipes: list[Recipe], **meta: Any) -> dict[s
         "firmware": meta.get("firmware", "2.10"),
         "serial": meta.get("serial", "0X0000000"),
         "cursor": 1,
+        "missing_props": list(missing_props or []),
         "slots": [
             {"name": recipe.name, "props": props_from_recipe(recipe), "empty": recipe.empty}
             for recipe in recipes
@@ -200,6 +203,9 @@ class MockCameraTransport:
         self._response(pending_tx, code)
 
     def _get_prop(self, prop: int, tx: int) -> None:
+        if prop in self.state.get("missing_props", []):
+            self._response(tx, RESPONSE_DEVICE_PROP_NOT_SUPPORTED)
+            return
         if prop == PROP_SLOT_CURSOR:
             self._data(OP_GET_DEVICE_PROP_VALUE, tx, struct.pack("<H", self.state["cursor"]))
         elif prop == PROP_SLOT_NAME:
@@ -217,6 +223,8 @@ class MockCameraTransport:
 
     def _set_prop(self, prop: int, payload: bytes) -> int:
         self.sent_props.append((prop, payload))
+        if prop in self.state.get("missing_props", []):
+            return RESPONSE_DEVICE_PROP_NOT_SUPPORTED
         if prop == PROP_SLOT_NAME:
             if not payload:
                 return RESPONSE_INVALID_PARAMETER
@@ -238,8 +246,8 @@ class MockCameraTransport:
         if prop in PROPS:
             index = PROPS.index(prop)
             slot = self._current_slot()
-            if slot["props"][index] == 0xFFFF:
-                slot["props"] = [0xFFFF] * 19
+            # Writing into a slot that was empty just replaces the 0xFFFF
+            # placeholders one by one, like a real body filling the block.
             slot["props"][index] = value
             slot["empty"] = False
             # Real X100VI firmware normalises Grain Off to wire value 7.

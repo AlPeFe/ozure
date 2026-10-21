@@ -45,16 +45,20 @@ is read first and merged).
 
 ```bash
 ozure set C4 --field shadow=1.5 --field clarity=-1
-ozure set C4 --dynamic-range dr400 --grain-effect strong-small
+ozure set C4 --dynamic-range dr400 --grain-effect strong_small
+ozure set C4 --dynamic-range-priority dr200 --wb-mode shade --wb-shift-b -3
 ozure set C4 --name "Portrait Warm" --field color=-1
 ```
 
-Named flags exist for the common fields (`--film-simulation`, `--dynamic-range`,
+`--field` reaches every scalar in the schema. The named flags are:
+`--film-simulation`, `--dynamic-range`, `--dynamic-range-priority`,
 `--grain-effect`, `--color-chrome`, `--color-chrome-fx-blue`, `--smooth-skin`,
 `--highlight`, `--shadow`, `--color`, `--sharpness`, `--clarity`,
-`--noise-reduction`). `--field` covers every scalar in the catalog schema. For a
-full white balance object, put it in a recipe file and use `apply` — or pass the
-whole object as JSON: `--field 'white_balance={"mode":"shade","shift_b":-2}'`.
+`--noise-reduction`, `--monochrome-wc`, `--monochrome-mg`, `--wb-mode`,
+`--wb-shift-r`, `--wb-shift-b`, `--wb-temperature`.
+
+For a full white balance object you can also pass JSON:
+`--field 'white_balance={"mode":"shade","shift_b":-2}'`.
 
 | flag | meaning |
 | --- | --- |
@@ -75,7 +79,10 @@ ozure apply ./my-recipe.json --slot C1 --keep-name --yes
 ### `backup [--out PATH]` and `restore FILE`
 
 `backup` writes `{"version", "created_at", "camera", "slots": {"C1": {...}, ...}}`.
-`restore` accepts the same file and rewrites every slot it contains.
+`restore` accepts the same file and rewrites every slot it contains. Slots the
+backup recorded as **empty** are skipped, because an empty slot cannot be
+re-created as empty — writing the defaults would invent settings. Pass
+`--include-empty` to write them anyway.
 
 ```bash
 ozure backup --out ~/Desktop/camera.json

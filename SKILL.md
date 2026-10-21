@@ -27,7 +27,13 @@ mode. Recipes are ordinary JSON, so the catalog is just a folder of files.
    refused.
 4. **Don't invent values.** Valid enums and ranges are in
    `ozure catalog format`; an invalid value fails locally before touching the
-   camera.
+   camera. Every field of the slot is exposed: name + the 19 property words
+   (film simulation, dynamic range and its priority, grain, smooth skin, color
+   chrome and fx blue, white balance mode/shift/temperature, highlight, shadow,
+   color, sharpness, clarity, high ISO NR, monochrome WC/MG).
+5. **Read the warnings.** Controls a body does not implement (clarity on older
+   firmware, the Kelvin word, monochrome controls on colour simulations) come
+   back as `warnings`, not as failures.
 
 ## Setup (once per machine)
 

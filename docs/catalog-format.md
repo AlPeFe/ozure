@@ -63,7 +63,7 @@ metadata beside them) also works.
 | `clarity` | -5..+5 | `0` |
 | `noise_reduction` | -4..+4 | `0` |
 | `monochrome_wc`, `monochrome_mg` | -9..+9, monochrome simulations only | `0` |
-| `exposure` | accepted for `fuji-ptp-core` compatibility, not written | `0` |
+| `exposure` | must be `0` or absent; the C1–C7 block has no exposure word | — |
 
 Film simulations: `provia`, `velvia`, `astia`, `pro_neg_hi`, `pro_neg_std`,
 `monochrome`, `monochrome_ye`, `monochrome_r`, `monochrome_g`, `sepia`,
@@ -84,6 +84,22 @@ Modes: `auto`, `daylight`, `shade`, `fluorescent_1`, `fluorescent_2`,
 `ambience_priority`. `shift_r`/`shift_b` are -9..+9 and are ignored (not sent) on
 monochrome simulations. `color_temperature` is only written in
 `color_temperature` mode.
+
+## Completeness
+
+The recipe block on the camera is the slot name plus 19 property words, and this
+schema covers all of them: film simulation, dynamic range + its priority, grain,
+the three effect strengths, the four white balance words, the five tone dials,
+high ISO NR, clarity and the two monochrome words. There is no hidden field.
+
+`exposure` exists in `fuji-ptp-core`'s DTO but has no property on the wire; ozure
+accepts `0` (so a core dump loads) and refuses any other value instead of
+pretending it will be written.
+
+Some bodies do not implement every word — clarity on older firmware, the Kelvin
+word outside colour-temperature mode, the monochrome words on colour
+simulations. Those are read as `0` with a warning, and a refused write is
+reported as a warning instead of aborting the slot halfway.
 
 ## Validation
 

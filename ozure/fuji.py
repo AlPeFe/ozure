@@ -81,9 +81,17 @@ PROPS = (
     CLARITY,
 )
 
-#: Properties that are legitimately absent on some bodies. A failure here is
-#: not fatal for the whole slot.
-OPTIONAL_PROPS = frozenset({TEMP, MONO_WC, MONO_MG})
+#: Properties that are legitimately absent on some bodies (older firmware has
+#: no clarity, non colour-temperature bodies may not expose the temperature
+#: word). A failure here must not abort the whole slot.
+OPTIONAL_PROPS = frozenset({TEMP, MONO_WC, MONO_MG, CLARITY})
+
+OPTIONAL_LABELS = {
+    TEMP: "white balance temperature",
+    MONO_WC: "monochrome WC",
+    MONO_MG: "monochrome MG",
+    CLARITY: "clarity",
+}
 
 
 class FujiPtp:
@@ -154,10 +162,10 @@ class FujiPtp:
             except (ProtocolError, TransportFailure) as exc:
                 if prop in OPTIONAL_PROPS:
                     words.append(0)
-                    missing.append(f"0x{prop:04X}")
+                    missing.append(OPTIONAL_LABELS.get(prop, f"0x{prop:04X}"))
                     continue
                 raise ProtocolError(
-                    f"could not read property 0x{prop:04X} of C{slot}: {exc}"
+                    f"could not read property 0x{prop:04X} of C{slot}: {exc.message}"
                 ) from exc
         recipe = recipe_from_props(name, words)
         if missing:
@@ -172,15 +180,31 @@ class FujiPtp:
     def _set_name(self, name: str) -> None:
         self.set(PROP_SLOT_NAME, ptp_name_bytes(name))
 
-    def _write_settings(self, recipe: Recipe) -> None:
+    def _set_optional(self, prop: int, value: bytes, warnings: list[str]) -> None:
+        """Write a property the body may not know about.
+
+        Older firmware lacks clarity and some bodies ignore the temperature
+        word unless the white balance is set to colour temperature. The write
+        is attempted, and a refusal becomes a warning instead of losing the
+        rest of the recipe half-written.
+        """
+        try:
+            self.set(prop, value)
+        except ProtocolError as exc:
+            warnings.append(
+                f"{OPTIONAL_LABELS.get(prop, f'property 0x{prop:04X}')} was not accepted "
+                f"by this body ({exc.message})"
+            )
+
+    def _write_settings(self, recipe: Recipe, warnings: list[str]) -> None:
         self.set(FILM, u16(FILM_SIMULATIONS[recipe.film_simulation]))
         self.set(DR_PRIORITY, u16(recipe.dynamic_range_priority))
         if recipe.dynamic_range_priority == 0:
             self.set(DR, u16(DYNAMIC_RANGES[recipe.dynamic_range]))
         mono = recipe.film_simulation in MONO_FILM_SIMULATIONS
         if mono:
-            self.set(MONO_WC, i16(dial(recipe.monochrome_wc)))
-            self.set(MONO_MG, i16(dial(recipe.monochrome_mg)))
+            self._set_optional(MONO_WC, i16(dial(recipe.monochrome_wc)), warnings)
+            self._set_optional(MONO_MG, i16(dial(recipe.monochrome_mg)), warnings)
         self.set(GRAIN, u16(GRAIN_EFFECTS[recipe.grain_effect]))
         # Colour-only controls: the camera rejects them on monochrome sims.
         if not mono:
@@ -192,27 +216,35 @@ class FujiPtp:
             self.set(WB_R, i16(recipe.white_balance.shift_r))
             self.set(WB_B, i16(recipe.white_balance.shift_b))
         if recipe.white_balance.mode == "color_temperature":
-            self.set(TEMP, u16(recipe.white_balance.color_temperature or 5600))
+            self._set_optional(TEMP, u16(recipe.white_balance.color_temperature or 5600), warnings)
         for prop, value in (
             (HIGHLIGHT, recipe.highlight),
             (SHADOW, recipe.shadow),
             (COLOR, recipe.color),
             (SHARPNESS, recipe.sharpness),
-            (CLARITY, recipe.clarity),
         ):
             self.set(prop, i16(dial(value)))
+        self._set_optional(CLARITY, i16(dial(recipe.clarity)), warnings)
         self.set(NR, u16(NR_VALUES[recipe.noise_reduction]))
 
-    def write_recipe(self, slot: int, recipe: Recipe, *, write_name: bool = True) -> None:
+    def write_recipe(self, slot: int, recipe: Recipe, *, write_name: bool = True) -> list[str]:
         """Write one complete recipe into one slot.
 
         The name goes first on purpose: it is the property the camera tends to
-        drop when a write is interrupted.
+        drop when a write is interrupted. Returns the warnings collected from
+        controls this body does not accept.
         """
+        if recipe.empty:
+            raise ProtocolError(
+                "refusing to write an empty recipe",
+                hint="an empty slot has no settings to restore; pick a real recipe",
+            )
+        warnings: list[str] = []
         self.select_slot(slot)
         if write_name:
             self._set_name(recipe.name)
-        self._write_settings(recipe)
+        self._write_settings(recipe, warnings)
+        return warnings
 
     def write_name(self, slot: int, name: str) -> None:
         self.select_slot(slot)

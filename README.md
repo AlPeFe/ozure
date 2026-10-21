@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.svg" alt="ozure — Fujifilm recipe CLI" width="420">
+  <img src="assets/logo.png" alt="ozure — a cute camera and the name" width="280">
 </p>
 
 <p align="center">
@@ -83,17 +83,26 @@ folder into your skills directory (`~/.claude/skills/`, `~/.pi/skills/`,
 
 ## Brand
 
-The name is the logo: **ozure**, lowercase, with the *o* — the lens — in pastel
-pink. Assets are generated, not hand-drawn:
+A cute pastel camera, with the name underneath in a smaller size. The *o* of
+**ozure** is the lens colour, so the drawing and the name share one hue. Every
+asset comes from a single geometry description (`tools/build_brand.py`), which
+emits both SVG and PNG — they cannot drift apart:
+
+| file | use |
+| --- | --- |
+| `assets/logo.svg` / `.png` | the lockup: camera + name (README, social) |
+| `assets/icon.svg` / `.png` | avatar: cream camera on a pink tile |
+| `assets/wordmark.svg` / `.png` | the name alone (demo title bar, tight spots) |
 
 ```bash
-python3 tools/build_brand.py    # logo + icon, SVG and PNG, from one font run
+python3 tools/build_brand.py    # logo, icon and wordmark, SVG + PNG
 python3 tools/build_demo_gif.py # assets/demo.gif, from real CLI runs
 ```
 
 | | |
 | --- | --- |
 | primary | `#f2a3b6` pastel pink |
+| primary deep | `#e58ea4` |
 | surface | `#fce4ea` blush |
 | background | `#fff9f7` cream |
 | ink | `#2c2f38` |
