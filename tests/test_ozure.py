@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import os
+import re
+import shlex
 import tempfile
 import unittest
 from pathlib import Path
@@ -381,7 +383,61 @@ class CliTests(unittest.TestCase):
         self.assertEqual(cli.main(["apply", "nope", "--slot", "C1", "--mock", "--json"]), 2)
 
 
-class PackagingTests(unittest.TestCase):
+class SkillDocTests(unittest.TestCase):
+    """SKILL.md is the contract an agent reads. If it drifts from the CLI, an
+    agent will confidently run a command that does not exist."""
+
+    def documented_commands(self) -> list[list[str]]:
+        text = (REPO / "SKILL.md").read_text(encoding="utf-8")
+        commands = []
+        in_fence = False
+        for raw in text.splitlines():
+            stripped = raw.strip()
+            if stripped.startswith("```"):
+                in_fence = not in_fence
+                continue
+            if not in_fence or not stripped.startswith("ozure "):
+                continue
+            line = stripped
+            # `cmd || fallback` and trailing `# comments`
+            line = line.split("||")[0].split("  #")[0].split(" #")[0].strip()
+            argv = shlex.split(line)
+            argv = [
+                "backup.json"
+                if token.startswith("~") or "..." in token or token.startswith("<")
+                else token
+                for token in argv
+            ]
+            commands.append(argv)
+        self.assertGreater(len(commands), 8)
+        return commands
+
+    def test_every_documented_command_parses(self):
+        parser = cli.build_parser()
+        for argv in self.documented_commands():
+            with self.subTest(argv=argv):
+                try:
+                    parser.parse_args(argv[1:])
+                except SystemExit as exc:  # --version / --help exit 0
+                    self.assertEqual(exc.code, 0, f"{argv} does not parse")
+
+    def test_documented_exit_codes_match_the_code(self):
+        from ozure import errors
+
+        text = (REPO / "SKILL.md").read_text(encoding="utf-8")
+        block = text[text.index("| code | meaning") : text.index("## Choosing a slot")]
+        documented = {int(match) for match in re.findall(r"^\| (\d+) \|", block, re.MULTILINE)}
+        actual = {0}
+        for name in dir(errors):
+            candidate = getattr(errors, name)
+            if isinstance(candidate, type) and issubclass(candidate, errors.OzureError):
+                actual.add(candidate.exit_code)
+        self.assertEqual(documented, actual)
+
+    def test_skill_documents_the_mock_boundary(self):
+        text = (REPO / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("Never fake hardware", text)
+
     def test_skill_and_readme_exist(self):
         for name in ("SKILL.md", "README.md", "LICENSE"):
             self.assertTrue((REPO / name).is_file(), f"{name} is missing")
