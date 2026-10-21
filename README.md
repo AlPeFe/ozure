@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.png">
-    <img src="assets/logo.png" alt="ozure — a derpy pastel axolotl and the name" width="270">
+    <img src="assets/logo.png" alt="ozure — a pastel jellyfish wrapping the name" width="270">
   </picture>
 </p>
 
@@ -107,10 +107,10 @@ a recipe lives. Your own catalog wins on name collisions.
 
 ## Brand
 
-A yuru-kyara axolotl: soft, slightly lopsided, three frills per side, one eye a
-touch lower than the other. The name sits underneath, smaller, with the *o* in
-the same pink as the mascot. Everything is **transparent** — no baked-in
-background — so it drops onto any theme:
+A kawaii jellyfish, no face: spotted bell, ruffled hem, four short tentacles and
+two long ones that fall around the name and close underneath it, holding the
+word. The *o* shares the mascot's pink. Everything is **transparent** — no
+baked-in background — so it drops onto any theme:
 
 | file | use |
 | --- | --- |

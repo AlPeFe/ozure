@@ -1,8 +1,8 @@
-"""Build the ozure brand: a yuru-kyara axolotl with the name under it.
+"""Build the ozure brand: a kawaii jellyfish wrapping the name.
 
-The mascot is the logo. It is deliberately soft and a bit lopsided — a
-yuru-kyara, not a corporate icon — with three frills per side, one eye a touch
-lower than the other and a sprout on top.
+The mascot is the logo: a faceless jellyfish — spotted bell, ruffled hem — whose
+two long tentacles fall past the wordmark and close underneath it, so the name
+sits inside the creature instead of next to it.
 
 One geometry description, two renderers (SVG + Pillow), transparent background
 everywhere so it can sit on any page:
@@ -49,9 +49,9 @@ CREAM = "#fff9f7"
 INK = "#2c2f38"
 WHITE = "#ffffff"
 
-WIDTH, HEIGHT = 512, 566
-NAME_SIZE = 74
-NAME_BASELINE = 536
+WIDTH, HEIGHT = 512, 600
+NAME_SIZE = 84
+NAME_BASELINE = 512
 
 Shape = dict[str, Any]
 
@@ -100,79 +100,170 @@ def star(cx: float, cy: float, radius: float) -> list[tuple[float, float]]:
     return points
 
 
+def catmull(control: list[tuple[float, float]], samples: int = 24) -> list[tuple[float, float]]:
+    """Smooth curve through the control points (Catmull-Rom)."""
+    pts = [control[0], *control, control[-1]]
+    out: list[tuple[float, float]] = []
+    for index in range(len(pts) - 3):
+        p0, p1, p2, p3 = pts[index : index + 4]
+        for step in range(samples):
+            t = step / samples
+            t2, t3 = t * t, t * t * t
+            out.append(
+                (
+                    0.5
+                    * (
+                        2 * p1[0]
+                        + (-p0[0] + p2[0]) * t
+                        + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2
+                        + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3
+                    ),
+                    0.5
+                    * (
+                        2 * p1[1]
+                        + (-p0[1] + p2[1]) * t
+                        + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2
+                        + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3
+                    ),
+                )
+            )
+    out.append(control[-1])
+    return out
+
+
+def tentacle(
+    control: list[tuple[float, float]], amplitude: float, waves: float, samples: int = 24
+) -> list[tuple[float, float]]:
+    """A smooth path with a lateral sine wave: what makes a tentacle read."""
+    centre = catmull(control, samples)
+    total = max(1, len(centre) - 1)
+    return [
+        (x + amplitude * math.sin(2 * math.pi * waves * index / total), y)
+        for index, (x, y) in enumerate(centre)
+    ]
+
+
+def bell_points(
+    cx: float,
+    cy: float,
+    rx: float,
+    ry: float,
+    *,
+    scallops: int = 5,
+    depth: float = 0.16,
+    amplitude: float = 0.13,
+    count: int = 140,
+) -> list[tuple[float, float]]:
+    """A jellyfish bell: smooth dome on top, ruffled hem at the bottom."""
+    points = []
+    for index in range(count + 1):
+        theta = math.pi + math.pi * index / count
+        points.append((cx + rx * math.cos(theta), cy + ry * math.sin(theta)))
+    for index in range(count + 1):
+        t = index / count
+        points.append(
+            (
+                cx + rx - 2 * rx * t,
+                cy + ry * depth + ry * amplitude * abs(math.sin(scallops * math.pi * t)),
+            )
+        )
+    return points
+
+
 def mascot_shapes(
     *,
     body: str = PETAL,
-    body_shade: str = PETAL_DEEP,
-    gill: str = PETAL_DEEP,
-    belly: str = CREAM,
-    face: str = INK,
-    cheek: str = PETAL_DEEP,
+    tentacle_colour: str = PETAL_DEEP,
+    spot: str = BLUSH,
     sparkle: str = PETAL_DEEP,
     with_sparkles: bool = True,
+    with_wrap: bool = True,
 ) -> list[Shape]:
-    """The axolotl: frills behind, egg body, one lopsided eye, sprout."""
+    """A kawaii jellyfish with no face: spotted bell, ruffled hem, and tentacles
+    that fall behind the name and curl around its ends."""
     shapes: list[Shape] = []
 
-    # frills, three each side, tucked behind the head
-    for side in (-1, 1):
-        for gx, gy, rx, ry, rotation in (
-            (150, 196, 44, 21, -0.55),
-            (134, 246, 48, 22, -0.12),
-            (150, 296, 42, 20, 0.32),
-        ):
-            cx = 256 + side * (gx - 256)
-            shapes.append(
-                {
-                    "type": "polygon",
-                    "points": blob(cx, gy, rx, ry, rotation * side, 0.05, 0.8),
-                    "fill": gill,
-                }
-            )
+    # inner tentacles: short, and they stop above the wordmark
+    for x, length, colour in (
+        (190, 150, tentacle_colour),
+        (226, 185, body),
+        (286, 185, body),
+        (322, 150, tentacle_colour),
+    ):
+        shapes.append(
+            {
+                "type": "polyline",
+                "points": tentacle(
+                    [
+                        (x, 195),
+                        (x + (x - 256) * 0.05, 195 + length * 0.45),
+                        (x + (x - 256) * 0.12, 195 + length),
+                    ],
+                    15,
+                    2.6,
+                ),
+                "stroke": colour,
+                "width": 14,
+            }
+        )
 
-    # body: a shade behind, the body on top, so the edge stays soft
-    shapes.append(
-        {
-            "type": "polygon",
-            "points": blob(256, 302, 132, 130, -0.05, 0.035, 1.1),
-            "fill": body_shade,
-        }
-    )
-    shapes.append(
-        {"type": "polygon", "points": blob(256, 296, 132, 130, -0.05, 0.035, 1.1), "fill": body}
-    )
-    # belly
-    shapes.append(
-        {"type": "polygon", "points": blob(256, 344, 62, 46, 0.0, 0.03, 0.4), "fill": belly}
-    )
+    # bell
+    shapes.append({"type": "polygon", "points": bell_points(256, 172, 148, 108), "fill": body})
+    for sx, sy, radius in (
+        (196, 140, 14),
+        (256, 118, 9),
+        (316, 142, 16),
+        (226, 172, 7),
+        (294, 174, 8),
+    ):
+        shapes.append({"type": "circle", "c": (sx, sy), "r": radius, "fill": spot})
 
-    # sprout on top
-    shapes.append(
-        {
-            "type": "curve",
-            "points": [(250, 170), (238, 130), (272, 118)],
-            "stroke": body_shade,
-            "width": 9,
-        }
-    )
-
-    # face: the right eye sits a couple of units higher — that is the whole joke
-    shapes.append({"type": "circle", "c": (220, 266), "r": 11, "fill": face})
-    shapes.append({"type": "circle", "c": (294, 260), "r": 11, "fill": face})
-    shapes.append({"type": "circle", "c": (196, 292), "r": 14, "fill": cheek})
-    shapes.append({"type": "circle", "c": (318, 288), "r": 13, "fill": cheek})
-    shapes.append(
-        {
-            "type": "curve",
-            "points": [(238, 300), (257, 316), (276, 298)],
-            "stroke": face,
-            "width": 7,
-        }
-    )
+    # the two long tentacles that wrap the name (off for the square icon)
+    if with_wrap:
+        shapes.append(
+            {
+                "type": "polyline",
+                "points": tentacle(
+                    [
+                        (114, 188),
+                        (96, 285),
+                        (106, 390),
+                        (122, 470),
+                        (140, 528),
+                        (190, 554),
+                        (256, 558),
+                    ],
+                    7,
+                    2.0,
+                ),
+                "stroke": tentacle_colour,
+                "width": 15,
+            }
+        )
+        shapes.append(
+            {
+                "type": "polyline",
+                "points": tentacle(
+                    [
+                        (398, 188),
+                        (416, 285),
+                        (406, 390),
+                        (390, 470),
+                        (372, 528),
+                        (322, 554),
+                        (256, 558),
+                    ],
+                    7,
+                    2.0,
+                ),
+                "stroke": tentacle_colour,
+                "width": 15,
+            }
+        )
 
     if with_sparkles:
-        shapes.append({"type": "polygon", "points": star(414, 186, 16), "fill": sparkle})
-        shapes.append({"type": "polygon", "points": star(444, 240, 9), "fill": sparkle})
+        shapes.append({"type": "polygon", "points": star(432, 214, 13), "fill": sparkle})
+        shapes.append({"type": "polygon", "points": star(80, 250, 9), "fill": sparkle})
     return shapes
 
 
@@ -312,6 +403,13 @@ def svg_shape(shape: Shape) -> str:
     if shape["type"] == "polygon":
         points = " ".join(f"{x:.2f},{y:.2f}" for x, y in shape["points"])
         return f'<polygon points="{points}" fill="{shape["fill"]}"/>'
+    if shape["type"] == "polyline":
+        points = " ".join(f"{x:.2f},{y:.2f}" for x, y in shape["points"])
+        return (
+            f'<polyline points="{points}" fill="none" stroke="{shape["stroke"]}" '
+            f'stroke-width="{shape["width"]:.2f}" stroke-linecap="round" '
+            'stroke-linejoin="round"/>'
+        )
     if shape["type"] == "curve":
         (x0, y0), (cx, cy), (x1, y1) = shape["points"]
         return (
@@ -339,6 +437,16 @@ def draw_shape(draw: ImageDraw.ImageDraw, shape: Shape, scale: float) -> None:
         )
     elif shape["type"] == "polygon":
         draw.polygon([(x * scale, y * scale) for x, y in shape["points"]], fill=rgb(shape["fill"]))
+    elif shape["type"] == "polyline":
+        points = [(x * scale, y * scale) for x, y in shape["points"]]
+        width = max(1, round(shape["width"] * scale))
+        draw.line(points, fill=rgb(shape["stroke"]), width=width, joint="curve")
+        for point in (points[0], points[-1]):
+            radius = width / 2
+            draw.ellipse(
+                [point[0] - radius, point[1] - radius, point[0] + radius, point[1] + radius],
+                fill=rgb(shape["stroke"]),
+            )
     elif shape["type"] == "curve":
         (x0, y0), (cx, cy), (x1, y1) = shape["points"]
         points = []
@@ -462,7 +570,7 @@ def main() -> None:
     lockup_png(shapes, glyphs, CREAM).save(ASSETS / "logo-dark.png")
 
     # The avatar is the mascot alone: sparkles would push it off centre.
-    icon = fit_shapes(mascot_shapes(with_sparkles=False), 512, padding=0.075)
+    icon = fit_shapes(mascot_shapes(with_sparkles=False, with_wrap=False), 512, padding=0.075)
     (ASSETS / "icon.svg").write_text(icon_svg(icon), encoding="utf-8")
     icon_png(icon).save(ASSETS / "icon.png")
 
