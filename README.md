@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.png">
-    <img src="assets/logo.png" alt="ozure — a pastel jellyfish wrapping the name" width="270">
+    <img src="assets/logo.png" alt="ozure — a small pastel jellyfish and the name" width="380">
   </picture>
 </p>
 
@@ -107,10 +107,10 @@ a recipe lives. Your own catalog wins on name collisions.
 
 ## Brand
 
-A kawaii jellyfish, no face: spotted bell, ruffled hem, four short tentacles and
-two long ones that fall around the name and close underneath it, holding the
-word. The *o* shares the mascot's pink. Everything is **transparent** — no
-baked-in background — so it drops onto any theme:
+A small kawaii jellyfish, no face: spotted bell, ruffled hem, four short wavy
+tentacles. It sits to the left of the name — a horizontal lockup, not a tall
+block — and the *o* of **ozure** shares the creature's pink. Everything is
+**transparent** — no baked-in background — so it drops onto any theme:
 
 | file | use |
 | --- | --- |
