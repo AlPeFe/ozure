@@ -50,9 +50,22 @@ ozure doctor --json                     # pyusb, USB visible, catalog count
 `python3 -m ozure` is always equivalent to the `ozure` command; use it if the
 entry point is not on `PATH`.
 
-On the camera: **USB RAW CONV./BACKUP RESTORE**. Windows needs WinUSB on the PTP
-interface (Zadig, vendor id starts with `04CB`); Linux may need a udev rule.
-`doctor` reports what it can see and what is wrong with each device.
+On the camera: **USB RAW CONV./BACKUP RESTORE**. `doctor` reports what it can see
+and what is wrong with each device.
+
+**Windows needs one manual step before the first connection.** The camera's PTP
+interface is owned by the system WPD driver and libusb cannot claim it, so
+`connect` fails with `cannot claim the PTP interface: Access denied` even though
+`doctor` lists the camera. Bind that interface to **WinUSB** once per machine:
+
+1. [Zadig](https://zadig.akeo.ie/) as administrator → *Options → List All Devices*.
+2. Pick the camera (`04CB`, product `0305`) → choose **WinUSB** → *Replace Driver*.
+3. Verify: `Get-PnpDevice -PresentOnly | Where-Object { $_.InstanceId -like '*VID_04CB*' }`
+   must report service `WINUSB`.
+
+Do not confuse `Access denied` (driver) with no libusb (`doctor` says *libusb
+missing* → `pip install libusb-package`) or with the camera being unplugged.
+Linux may need a udev rule; macOS needs nothing.
 
 ## Workflow
 

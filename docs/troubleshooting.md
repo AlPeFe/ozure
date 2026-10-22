@@ -34,6 +34,18 @@ The device is there but the interface could not be claimed.
   This is a one-time, per-machine change and it does disable Fujifilm's own
   tethering tools for that camera; revert it in *Device Manager → Update driver
   → Search automatically* if you need them back.
+
+  Verify the binding before blaming the code:
+
+  ```powershell
+  Get-PnpDevice -PresentOnly | Where-Object { $_.InstanceId -like '*VID_04CB*' } | ForEach-Object {
+    $svc = (Get-PnpDeviceProperty -InstanceId $_.InstanceId -KeyName 'DEVPKEY_Device_Service').Data
+    "$($_.Status) | $svc" }
+  ```
+
+  `WUDFWpdMtp` means Windows' WPD stack still owns it (Zadig did not take, usually
+  because the camera was replugged after installing, or the driver went to a
+  different device instance). `WINUSB` means it is ready.
 * **Linux**: add a udev rule instead of running as root:
 
   ```bash

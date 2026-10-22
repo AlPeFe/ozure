@@ -163,6 +163,9 @@ python3 tools/build_promo.py    # assets/promo.mp4 (36 s, 1280x720, --lang es fo
 python3 -m unittest discover -s tests -v   # 23 tests, no camera needed
 ```
 
+Tested against a real body over USB (`04CB:0305`): connect, list, show, backup,
+dry run and a verified write.
+
 The protocol layer is a Python mirror of
 [`fuji-ptp-core`](https://github.com/AlPeFe/fuji-ptp-core) (Rust). Same
 operations, same property block, same write order — the two are kept in sync by
