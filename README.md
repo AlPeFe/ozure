@@ -159,6 +159,7 @@ a recipe lives. Your own catalog wins on name collisions.
 | [`tools/ci-workflow.yml`](tools/ci-workflow.yml) | GitHub Actions CI (copy to `.github/workflows/`) |
 | [`assets/palette.md`](assets/palette.md) | the palette, generated with the brand |
 | [`docs/promo.md`](docs/promo.md) | 36 s promo video, poster and post copy |
+| [`docs/post-reddit.md`](docs/post-reddit.md) | ready-to-paste Reddit posts (photo + CLI subs) |
 | [`docs/distribution.md`](docs/distribution.md) | PyPI, npm, Homebrew, Scoop, binaries |
 
 ## Brand
