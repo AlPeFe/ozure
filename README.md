@@ -11,7 +11,8 @@
 </p>
 
 <p align="center">
-  <img alt="tests" src="https://img.shields.io/badge/tests-23%20passing-c86a88">
+  <a href="https://www.npmjs.com/package/@alpefe/ozure"><img alt="npm" src="https://img.shields.io/npm/v/@alpefe/ozure?color=c86a88&label=npm"></a>
+  <img alt="tests" src="https://img.shields.io/badge/tests-49%20passing-c86a88">
   <img alt="python" src="https://img.shields.io/badge/python-3.10%2B-2c2f38">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-f2a3b6">
 </p>
@@ -43,6 +44,10 @@ ozure backup                              # all seven slots to one JSON file
 ```bash
 npm install -g @alpefe/ozure   # prebuilt binary, no Python needed
 ```
+
+Also on npm: [@alpefe/ozure](https://www.npmjs.com/package/@alpefe/ozure) — the
+Windows x64 binary ships today; macOS and Linux fall back to `python -m ozure`
+until the CI matrix publishes theirs.
 
 or through Python:
 
