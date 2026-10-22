@@ -123,7 +123,7 @@ block — and the *o* of **ozure** shares the creature's pink. Everything is
 ```bash
 python3 tools/build_brand.py    # logo, icon and wordmark, SVG + PNG
 python3 tools/build_demo_gif.py # assets/demo.gif, from real CLI runs
-python3 tools/build_promo.py    # assets/promo.mp4 (36 s, 1280x720)
+python3 tools/build_promo.py    # assets/promo.mp4 (36 s, 1280x720, --lang es for Spanish)
 ```
 
 | | |

@@ -271,8 +271,73 @@ def paste_mascot(image: Image.Image, size: int, xy: tuple[int, int], alpha: floa
 # --------------------------------------------------------------------------
 
 
+TEXTS = {
+    "en": {
+        "intro_tagline": "Fujifilm recipes: from the catalog to the camera",
+        "intro_sub": "CLI + skill · USB PTP · no GUI, no card readers",
+        "seven_title": "Your camera already holds 7 recipes",
+        "seven_sub": "C1–C7 — until now you edited them with the dial.",
+        "card_reads": "reads them",
+        "card_edits": "edits them",
+        "card_installs": "installs them back",
+        "card_note": "over USB, no GUI",
+        "steps": [
+            ("1 · Connect", "the camera shows up as soon as it is in PTP mode"),
+            ("2 · Read", "all seven slots, with their full settings"),
+            ("3 · Dry run", "diff before touching anything: exit 10, nothing written"),
+            ("4 · Write and verify", "re-reads the slot and compares field by field"),
+        ],
+        "catalogs_title": "126 recipes in 10 catalogs",
+        "catalogs_sub": "Fuji X Weekly, Osan-Bilgi, Alex Armitage… plus your own, straight from the camera.",
+        "catalogs_footer": "$ ozure catalog export    saves the 7 on your camera into your own catalog",
+        "skill_title": "It is also an agent skill",
+        "skill_sub": "Ask in plain language; the agent runs the CLI, with the same guardrails.",
+        "skill_user": ["connect to my Fuji and put", "Kodak Gold 200 in C6"],
+        "skill_agent": [
+            "Done: C6 = Kodak Gold 200. Diff first,",
+            "then --yes, then a re-read of the slot.",
+            "Backup in ~/.ozure/backups/…",
+        ],
+        "who_user": "you",
+        "who_agent": "agent · ozure",
+        "cta_sub": "CLI + skill · MIT · your recipes never leave your machine",
+    },
+    "es": {
+        "intro_tagline": "Recetas Fujifilm: del catálogo a la cámara",
+        "intro_sub": "CLI + skill · USB PTP · sin GUI, sin tarjetas",
+        "seven_title": "Tu cámara ya tiene 7 recetas",
+        "seven_sub": "C1–C7: solo se tocaban con el dedo y la rueda.",
+        "card_reads": "las lee",
+        "card_edits": "las edita",
+        "card_installs": "las reinstala",
+        "card_note": "por USB, sin GUI",
+        "steps": [
+            ("1 · Conecta", "la cámara aparece en cuanto está en modo PTP"),
+            ("2 · Lee", "los siete slots, con sus ajustes completos"),
+            ("3 · Prueba en seco", "diff antes de tocar nada; exit 10, nada escrito"),
+            ("4 · Escribe y verifica", "relee el slot y compara campo a campo"),
+        ],
+        "catalogs_title": "126 recetas en 10 catálogos",
+        "catalogs_sub": "Fuji X Weekly, Osan-Bilgi, Alex Armitage… y el tuyo, con lo que tengas en la cámara.",
+        "catalogs_footer": "$ ozure catalog export    guarda las 7 de tu cámara en tu catálogo",
+        "skill_title": "También es un skill",
+        "skill_sub": "Se lo pides en lenguaje natural y el agente ejecuta el CLI, con los mismos límites.",
+        "skill_user": ["conecta a mi Fuji y ponme la receta", "Kodak Gold 200 en C6"],
+        "skill_agent": [
+            "Hecho: C6 = Kodak Gold 200. Antes te enseño",
+            "el diff, escribo con --yes y releo el slot.",
+            "Backup en ~/.ozure/backups/…",
+        ],
+        "who_user": "tú",
+        "who_agent": "agente · ozure",
+        "cta_sub": "CLI + skill · MIT · tus recetas se quedan en tu máquina",
+    },
+}
+
+
 class Promo:
-    def __init__(self, home: Path):
+    def __init__(self, home: Path, lang: str = "en"):
+        self.text = TEXTS[lang]
         self.connect = run_cli(["connect"], home)
         self.listing = run_cli(["list"], home)
         self.catalogs = run_cli(["catalogs"], home)
@@ -290,7 +355,7 @@ class Promo:
             ("ozure apply kodak-gold-200 --slot C6", self.dry),
             ("ozure apply kodak-gold-200 --slot C6 --yes", self.write),
         ):
-            typing = len(command) / 55 + 0.35
+            typing = len(command) / 70 + 0.25
             reveal = len(output) / 7.0
             hold = 0.7 if "kodak" not in command else 1.1
             duration = typing + reveal + hold
@@ -335,7 +400,7 @@ class Promo:
         fade_text(
             image,
             (W / 2, 452),
-            "Recetas Fujifilm: del catálogo a la cámara",
+            self.text["intro_tagline"],
             qfont(34),
             INK,
             ease((t - 1.0) / 0.8),
@@ -344,7 +409,7 @@ class Promo:
         fade_text(
             image,
             (W / 2, 508),
-            "CLI + skill · USB PTP · sin GUI, sin tarjetas",
+            self.text["intro_sub"],
             qfont(22),
             DIM,
             ease((t - 1.7) / 0.8),
@@ -355,7 +420,7 @@ class Promo:
         fade_text(
             image,
             (110, 120),
-            "Tu cámara ya tiene 7 recetas",
+            self.text["seven_title"],
             qfont(40),
             INK,
             ease((t - 4.3) / 0.45),
@@ -363,7 +428,7 @@ class Promo:
         fade_text(
             image,
             (110, 178),
-            "C1–C7. Hasta ahora solo se tocaban con el dedo y la rueda.",
+            self.text["seven_sub"],
             qfont(23),
             TEXT,
             ease((t - 4.6) / 0.45),
@@ -390,29 +455,26 @@ class Promo:
         if right > 0:
             rounded_card(image, (700, 250, 1170, 500))
             fade_text(image, (736, 286), "ozure", qfont(26), ROSE, right)
-            fade_text(image, (736, 330), "las lee", qfont(28), INK, right)
-            fade_text(image, (736, 374), "las edita", qfont(28), INK, right * 0.97)
-            fade_text(image, (736, 418), "las reinstala", qfont(28), INK, right * 0.94)
-            fade_text(image, (736, 462), "por USB, sin GUI", qfont(18), DIM, right * 0.9)
+            fade_text(image, (736, 330), self.text["card_reads"], qfont(28), INK, right)
+            fade_text(image, (736, 374), self.text["card_edits"], qfont(28), INK, right * 0.97)
+            fade_text(image, (736, 418), self.text["card_installs"], qfont(28), INK, right * 0.94)
+            fade_text(image, (736, 462), self.text["card_note"], qfont(18), DIM, right * 0.9)
 
     def scene_terminal(self, image: Image.Image, t: float) -> None:
         step = next((step for step in reversed(self.steps) if t >= step["start"]), self.steps[0])
         local = t - step["start"]
-        typed = step["command"][: int(max(0.0, local) * 55)]
-        if local < step["typing"]:
+        typed = step["command"][: int(max(0.0, local) * 70)]
+        # The output starts a beat before the typing finishes: a terminal that
+        # sits empty looks like a loading screen.
+        reveal_at = step["typing"] - 0.15
+        if local < reveal_at:
             output: list[tuple[str, tuple[int, int, int]]] = []
         else:
-            visible = int((local - step["typing"]) * 7.0) + 1
-            output = step["output"][:visible]
+            visible = int((local - reveal_at) * 7.0) + 1
+            output = step["output"][: max(1, visible)]
 
-        captions = {
-            0: ("1 · Conecta", "la cámara aparece en cuanto está en modo PTP"),
-            1: ("2 · Lee", "los siete slots, con sus ajustes completos"),
-            2: ("3 · Prueba en seco", "diff antes de tocar nada; exit 10, nada escrito"),
-            3: ("4 · Escribe y verifica", "relee el slot y compara campo a campo"),
-        }
         index = self.steps.index(step)
-        title, subtitle = captions[index]
+        title, subtitle = self.text["steps"][index]
         fade_text(image, (90, 54), title, qfont(32), INK, 1.0)
         fade_text(image, (92, 100), subtitle, qfont(20), DIM, 1.0)
 
@@ -429,11 +491,11 @@ class Promo:
 
     def scene_catalogs(self, image: Image.Image, t: float) -> None:
         reveal = ease((t - self.catalog_scene) / 0.6)
-        fade_text(image, (90, 56), "126 recetas en 10 catálogos", qfont(38), INK, reveal)
+        fade_text(image, (90, 56), self.text["catalogs_title"], qfont(38), INK, reveal)
         fade_text(
             image,
             (92, 108),
-            "Fuji X Weekly, Osan-Bilgi, Alex Armitage… y el tuyo, con lo que tengas en la cámara.",
+            self.text["catalogs_sub"],
             qfont(20),
             TEXT,
             ease((t - self.catalog_scene - 0.2) / 0.6),
@@ -450,7 +512,7 @@ class Promo:
         fade_text(
             image,
             (92, 596),
-            "$ ozure catalog export    guarda las 7 de tu cámara en tu catálogo",
+            self.text["catalogs_footer"],
             qfont(21),
             ROSE,
             ease((t - self.catalog_scene - 1.4) / 0.6),
@@ -458,11 +520,11 @@ class Promo:
 
     def scene_skill(self, image: Image.Image, t: float) -> None:
         reveal = ease((t - self.skill_scene) / 0.6)
-        fade_text(image, (90, 56), "También es un skill", qfont(38), INK, reveal)
+        fade_text(image, (90, 56), self.text["skill_title"], qfont(38), INK, reveal)
         fade_text(
             image,
             (92, 108),
-            "Se lo pides en lenguaje natural y el agente ejecuta el CLI, con los mismos límites.",
+            self.text["skill_sub"],
             qfont(20),
             TEXT,
             ease((t - self.skill_scene - 0.2) / 0.6),
@@ -470,20 +532,16 @@ class Promo:
         bubble(
             image,
             (90, 186, 690, 300),
-            ["conecta a mi Fuji y ponme la receta", "Kodak Gold 200 en C6"],
-            who="tú",
+            self.text["skill_user"],
+            who=self.text["who_user"],
             alpha=ease((t - self.skill_scene - 0.6) / 0.5),
             fill=BLUSH,
         )
         bubble(
             image,
             (300, 330, W - 90, 470),
-            [
-                "Hecho: C6 = Kodak Gold 200. Antes te enseño",
-                "el diff, escribo con --yes y releo el slot.",
-                "Backup en ~/.ozure/backups/…",
-            ],
-            who="agente · ozure",
+            self.text["skill_agent"],
+            who=self.text["who_agent"],
             alpha=ease((t - self.skill_scene - 1.4) / 0.5),
             fill=WHITE,
         )
@@ -514,7 +572,7 @@ class Promo:
         fade_text(
             image,
             (W / 2, 452),
-            "CLI + skill · MIT · tus recetas se quedan en tu máquina",
+            self.text["cta_sub"],
             qfont(21),
             TEXT,
             ease((t - self.cta_scene - 1.1) / 0.6),
@@ -532,13 +590,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--gif", action="store_true", help="also write assets/promo-preview.gif")
     parser.add_argument("--poster", default="", help="write this frame (seconds) as a PNG")
+    parser.add_argument("--lang", default="en", choices=sorted(TEXTS), help="caption language")
     args = parser.parse_args()
 
     import imageio_ffmpeg
 
     ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
     home = Path(tempfile.mkdtemp(prefix="ozure-promo-"))
-    promo = Promo(home)
+    promo = Promo(home, args.lang)
     total_frames = int(promo.end * FPS)
     out = ASSETS / "promo.mp4"
     print(f"{promo.end:.1f}s · {total_frames} frames · {W}x{H}@{FPS}")

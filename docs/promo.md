@@ -1,16 +1,19 @@
 # Promo
 
-`assets/promo.mp4` — 36 s, 1280×720, H.264, silent, no subtitles burned as
-captions? Yes: every line of narration is on screen, so it works muted.
+`assets/promo.mp4` — 36 s, 1280×720, H.264, silent, and every line of narration
+is burned in, so it works muted (which is how Twitter plays it).
 
 Regenerate it (it runs the real CLI against the simulated body, so it can never
 show a command that does not work):
 
 ```bash
-python tools/build_promo.py --poster 3.2
+python tools/build_promo.py --poster 3.2        # English (the cut in assets/)
+python tools/build_promo.py --lang es --poster 3.2   # Spanish
 ```
 
 `assets/promo-poster.png` is a still from the intro, useful as a thumbnail.
+A local copy (video, poster, tweet text and this file) lives in
+`~/Videos/ozure-promo/`.
 
 ## Copy for the post
 
