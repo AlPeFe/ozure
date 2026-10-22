@@ -41,11 +41,22 @@ ozure backup                              # all seven slots to one JSON file
 ## Install
 
 ```bash
+pipx install "ozure[usb]"     # once it is on PyPI: isolated CLI, nothing else
+uvx --from "ozure[usb]" ozure # or run it without installing
+```
+
+From a checkout, while it is still private:
+
+```bash
 git clone https://github.com/AlPeFe/ozure
 cd ozure
 python3 -m pip install -e .[usb]       # or: pip install pyusb
 python3 -m ozure doctor                # is the camera visible?
 ```
+
+Prebuilt single-file binaries (no Python at all) are built with
+`tools/ozure.spec`; see [`docs/distribution.md`](docs/distribution.md) for PyPI,
+npm, Homebrew and Scoop.
 
 On the camera, pick **USB RAW CONV./BACKUP RESTORE**. Windows needs WinUSB on
 the *USB PTP Camera* interface (Zadig); Linux may need a udev rule.
@@ -105,6 +116,7 @@ a recipe lives. Your own catalog wins on name collisions.
 | [`tools/ci-workflow.yml`](tools/ci-workflow.yml) | GitHub Actions CI (copy to `.github/workflows/`) |
 | [`assets/palette.md`](assets/palette.md) | the palette, generated with the brand |
 | [`docs/promo.md`](docs/promo.md) | 36 s promo video, poster and post copy |
+| [`docs/distribution.md`](docs/distribution.md) | PyPI, npm, Homebrew, Scoop, binaries |
 
 ## Brand
 

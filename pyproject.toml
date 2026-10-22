@@ -10,12 +10,17 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Alex Pérez Fernández" }]
-keywords = ["fujifilm", "ptp", "recipes", "camera", "agent-skill"]
+keywords = ["fujifilm", "ptp", "recipes", "camera", "agent-skill", "x100vi", "film-simulation"]
 classifiers = [
+  "Development Status :: 4 - Beta",
   "Environment :: Console",
+  "Intended Audience :: End Users/Desktop",
+  "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
   "Topic :: Multimedia :: Graphics :: Capture :: Digital Camera",
 ]
+
 dependencies = []
 
 [project.optional-dependencies]
@@ -24,11 +29,23 @@ usb = ["pyusb>=1.2"]
 [project.scripts]
 ozure = "ozure.cli:main"
 
+[project.urls]
+Homepage = "https://github.com/AlPeFe/ozure"
+Source = "https://github.com/AlPeFe/ozure"
+Issues = "https://github.com/AlPeFe/ozure/issues"
+Documentation = "https://github.com/AlPeFe/ozure/tree/main/docs"
+Changelog = "https://github.com/AlPeFe/ozure/commits/main"
+
 [tool.setuptools]
 packages = ["ozure"]
 
 [tool.setuptools.package-data]
-ozure = ["py.typed"]
+ozure = [
+  "py.typed",
+  "data/catalog/*/catalog.json",
+  "data/catalog/*/*.json",
+  "data/catalog/README.md",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -81,6 +81,14 @@ class CatalogRecipe:
 
 
 def repo_catalog_dir() -> Path:
+    """The bundled collections.
+
+    They ship *inside* the wheel (`ozure/data/catalog`) so `pip install ozure`
+    has the recipes; a source checkout keeps working through the same path.
+    """
+    packaged = Path(__file__).resolve().parent / "data" / "catalog"
+    if packaged.is_dir():
+        return packaged
     return Path(__file__).resolve().parent.parent / "catalog"
 
 

@@ -11,8 +11,8 @@ film simulation enum and a human description like
 This script parses that text into real recipes, validates them with ozure's own
 model, and writes one catalog per collection:
 
-    catalog/<collection-id>/catalog.json     collection metadata
-    catalog/<collection-id>/<recipe-slug>.json
+    ozure/data/catalog/<collection-id>/catalog.json     collection metadata
+    ozure/data/catalog/<collection-id>/<recipe-slug>.json
 
 Run: python tools/import_discover.py [--source PATH_OR_URL] [--out DIR]
 """
@@ -426,7 +426,7 @@ def build(source: Path, out: Path) -> dict[str, int]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", help="DiscoverData.kt path or URL")
-    parser.add_argument("--out", default=str(ROOT / "catalog"))
+    parser.add_argument("--out", default=str(ROOT / "ozure" / "data" / "catalog"))
     args = parser.parse_args()
 
     if args.source:

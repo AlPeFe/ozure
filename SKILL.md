@@ -41,7 +41,7 @@ files. You never need the GUI, a vendor SDK, or gphoto2.
 ## Install check (first thing, always)
 
 ```bash
-ozure --version                         # if it fails: python3 -m pip install -e .
+ozure --version                         # if it fails: pipx install "ozure[usb]"
 python3 -m pip install pyusb            # needed for real USB (add libusb-package)
 ozure doctor --json                     # pyusb, USB visible, catalog count
 ```

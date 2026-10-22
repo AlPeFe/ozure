@@ -50,4 +50,4 @@ Or drop a JSON file here, one recipe per file:
 }
 ```
 
-Full schema: `ozure catalog format` · [`../docs/catalog-format.md`](../docs/catalog-format.md).
+Full schema: `ozure catalog format` · [`docs/catalog-format.md`](../../../docs/catalog-format.md).

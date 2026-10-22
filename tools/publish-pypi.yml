@@ -1,0 +1,68 @@
+# Copy to .github/workflows/publish.yml once the pushing token has the
+# `workflow` scope (gh auth refresh -s workflow), and configure PyPI Trusted
+# Publishing for this repo (pypi.org -> Your projects -> Publishing).
+name: publish
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  id-token: write # Trusted Publishing: no token secret needed
+
+jobs:
+  pypi:
+    runs-on: ubuntu-latest
+    environment: pypi
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build
+        run: |
+          python -m pip install build
+          python -m build
+      - name: Check the catalogs made it into the wheel
+        run: |
+          python - <<'EOF'
+          import glob, zipfile
+          wheel = glob.glob("dist/*.whl")[0]
+          names = zipfile.ZipFile(wheel).namelist()
+          recipes = [n for n in names if n.startswith("ozure/data/catalog/") and n.endswith(".json")]
+          print(len(recipes), "catalog json files")
+          assert len(recipes) > 100, "the bundled catalogs are missing from the wheel"
+          EOF
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  binaries:
+    # One binary per OS: PyInstaller cannot cross-compile.
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: ozure-win32-x64.zip
+          - os: macos-14
+            artifact: ozure-darwin-arm64.tar.gz
+          - os: macos-13
+            artifact: ozure-darwin-x64.tar.gz
+          - os: ubuntu-latest
+            artifact: ozure-linux-x64.tar.gz
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pyinstaller pyusb
+      - run: pyinstaller tools/ozure.spec
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: dist/ozure*
+      - name: Attach to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/ozure*
