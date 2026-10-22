@@ -4,9 +4,10 @@
     python tools/publish_npm.py                # platform packages, then the launcher
 
 npm asks for a one-time password when the account has 2FA enabled for
-publishing. Either type it when prompted, or put an **Automation** token in
-~/.npmrc (Account -> Access Tokens -> Automation: it bypasses 2FA, which is also
-what CI needs):
+publishing. Either type it when prompted (`--otp 123456` also works, and npm
+reuses it for the two publishes), or put an **Automation** token in ~/.npmrc
+(Account -> Access Tokens -> Automation: it bypasses 2FA, which is also what CI
+needs):
 
     //registry.npmjs.org/:_authToken=npm_XXXXXXXX
 
@@ -34,6 +35,11 @@ def manifest(directory: Path) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dry-run", action="store_true", help="print the commands only")
+    parser.add_argument(
+        "--otp",
+        default="",
+        help="one-time password from the authenticator; npm reuses it for both publishes",
+    )
     args = parser.parse_args()
 
     npm = shutil.which("npm") or "npm"
@@ -73,6 +79,8 @@ def main() -> int:
     for directory in queue:
         data = manifest(directory)
         command = [npm, "publish", "--access", "public"]
+        if args.otp:
+            command.append(f"--otp={args.otp}")
         printable = " ".join(command)
         print(f"\n== {data['name']}@{data['version']}  ({directory.relative_to(ROOT)})")
         if args.dry_run:
