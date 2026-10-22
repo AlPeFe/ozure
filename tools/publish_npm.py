@@ -3,11 +3,15 @@
     python tools/publish_npm.py --dry-run      # show what would go out
     python tools/publish_npm.py                # platform packages, then the launcher
 
-npm asks for a one-time password when the account has 2FA enabled for
-publishing. Either type it when prompted (`--otp 123456` also works, and npm
-reuses it for the two publishes), or put an **Automation** token in ~/.npmrc
-(Account -> Access Tokens -> Automation: it bypasses 2FA, which is also what CI
-needs):
+Two flows are supported, because npm now hands out stage-only tokens:
+
+* plain `npm publish` (classic token or an interactive 2FA session);
+* staged publishing: `npm stage publish` writes the version to the registry in a
+  pending state and a maintainer promotes it with `npm stage approve <id>`
+  (that step needs proof-of-presence, i.e. 2FA in your own terminal).
+
+The script detects the second case automatically and prints the approve commands
+in the right order.
 
     //registry.npmjs.org/:_authToken=npm_XXXXXXXX
 
@@ -25,11 +29,40 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+NL = chr(10)
 NPM = ROOT / "npm"
 
 
 def manifest(directory: Path) -> dict:
     return json.loads((directory / "package.json").read_text(encoding="utf-8"))
+
+
+STAGE_HINT = ("stage-only", "npm stage publish", "staged publish", "staged")
+
+
+def run_publish(directory: Path, npm: str, otp: str, *, stage: bool) -> tuple[int, str]:
+    command = [npm, "publish", "--access", "public"]
+    if stage:
+        command = [npm, "stage", "publish", ".", "--access", "public"]
+    if otp:
+        command.append(f"--otp={otp}")
+    result = subprocess.run(command, cwd=directory, capture_output=True, text=True, check=False)
+    output = (result.stdout or "") + (result.stderr or "")
+    print(output.strip()[-1200:] or "(no output)")
+    return result.returncode, output
+
+
+def staged_list(npm: str) -> list[dict]:
+    result = subprocess.run(
+        [npm, "stage", "list", "--json"], capture_output=True, text=True, check=False
+    )
+    try:
+        data = json.loads(result.stdout or "[]")
+    except json.JSONDecodeError:
+        return []
+    if isinstance(data, dict):
+        data = data.get("staged", []) or data.get("items", [])
+    return [item for item in data if isinstance(item, dict)]
 
 
 def main() -> int:
@@ -39,6 +72,11 @@ def main() -> int:
         "--otp",
         default="",
         help="one-time password from the authenticator; npm reuses it for both publishes",
+    )
+    parser.add_argument(
+        "--stage",
+        action="store_true",
+        help="use staged publishing from the start (npm stage publish)",
     )
     args = parser.parse_args()
 
@@ -76,23 +114,41 @@ def main() -> int:
         return 1
 
     queue = [*ready, launcher]
+    staged: list[str] = []
     for directory in queue:
         data = manifest(directory)
-        command = [npm, "publish", "--access", "public"]
-        if args.otp:
-            command.append(f"--otp={args.otp}")
-        printable = " ".join(command)
-        print(f"\n== {data['name']}@{data['version']}  ({directory.relative_to(ROOT)})")
+        print(NL + f"== {data['name']}@{data['version']}  ({directory.relative_to(ROOT)})")
         if args.dry_run:
-            print(f"   {printable}")
+            stage_flag = "stage " if args.stage else ""
+            print(f"   {npm} {stage_flag}publish --access public")
             continue
-        result = subprocess.run(command, cwd=directory, check=False)
-        if result.returncode != 0:
+        code, output = run_publish(directory, npm, args.otp, stage=args.stage)
+        if code == 0:
+            continue
+        if not args.stage and any(hint in output.lower() for hint in STAGE_HINT):
+            print(NL + "registry wants a staged publish; retrying with `npm stage publish`...")
+            code, output = run_publish(directory, npm, args.otp, stage=True)
+        if code != 0:
             print(f"failed while publishing {data['name']}", file=sys.stderr)
-            return result.returncode
+            return code
+        staged.append(f"{data['name']}@{data['version']}")
 
-    if not args.dry_run:
-        print("\ndone. Check with:")
+    if staged:
+        print(NL + "staged (not public yet): " + ", ".join(staged))
+        print("a maintainer promotes each one, with 2FA:")
+        found = False
+        for item in staged_list(npm):
+            name = item.get("name") or item.get("package")
+            version = item.get("version")
+            stage_id = item.get("stageId") or item.get("stage_id") or item.get("id")
+            if name and stage_id:
+                found = True
+                print(f"  npm stage approve {stage_id}    # {name}@{version}")
+        if not found:
+            print("  npm stage list                 # copy the ids from here")
+
+    if not args.dry_run and not staged:
+        print(NL + "done. Check with:")
         print(f"  npm view {launcher_name} version")
         print(f"  npm install -g {launcher_name}")
     return 0
