@@ -66,3 +66,58 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: dist/ozure*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  npm:
+    needs: binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Unpack the binaries into the platform packages
+        run: |
+          python - <<'EOF'
+          import shutil, tarfile, zipfile
+          from pathlib import Path
+          artifacts = Path("artifacts")
+          mapping = {
+              "ozure-win32-x64.zip": ("ozure-win32-x64", "ozure.exe"),
+              "ozure-darwin-arm64.tar.gz": ("ozure-darwin-arm64", "ozure"),
+              "ozure-darwin-x64.tar.gz": ("ozure-darwin-x64", "ozure"),
+              "ozure-linux-x64.tar.gz": ("ozure-linux-x64", "ozure"),
+          }
+          for artifact, (package, binary) in mapping.items():
+              matches = list(artifacts.glob(f"**/{artifact}"))
+              if not matches:
+                  print(f"skip {artifact}: not built")
+                  continue
+              target = Path("npm") / package / "bin"
+              target.mkdir(parents=True, exist_ok=True)
+              archive = matches[0]
+              if artifact.endswith(".zip"):
+                  with zipfile.ZipFile(archive) as z:
+                      source = z.open(binary)
+                      (target / binary).write_bytes(source.read())
+              else:
+                  with tarfile.open(archive) as t:
+                      member = next(m for m in t.getmembers() if m.name.endswith(binary))
+                      (target / binary).write_bytes(t.extractfile(member).read())
+              (target / binary).chmod(0o755)
+              print(f"{package}: {binary} in place")
+          EOF
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          python tools/build_npm.py --skip-build --pack
+          for pkg in npm/ozure-*/; do
+            [ -d "$pkg/bin" ] && npm publish "$pkg" --access public
+          done
+          npm publish npm/ozure --access public

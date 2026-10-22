@@ -526,6 +526,24 @@ class SkillDocTests(unittest.TestCase):
                 actual.add(candidate.exit_code)
         self.assertEqual(documented, actual)
 
+    def test_npm_package_matches_the_python_version(self):
+        manifest = json.loads((REPO / "npm" / "ozure" / "package.json").read_text(encoding="utf-8"))
+        version = None
+        for line in (REPO / "pyproject.toml").read_text(encoding="utf-8").splitlines():
+            if line.startswith("version ="):
+                version = line.split("=", 1)[1].strip().strip('"')
+                break
+        self.assertEqual(manifest["version"], version)
+        self.assertEqual(manifest["bin"], {"ozure": "bin/ozure.js"})
+        for name, wanted in manifest["optionalDependencies"].items():
+            self.assertEqual(wanted, version, name)
+            self.assertTrue(name.startswith("@"))
+
+    def test_npm_launcher_is_executable_and_has_a_shebang(self):
+        shim = REPO / "npm" / "ozure" / "bin" / "ozure.js"
+        self.assertTrue(shim.is_file())
+        self.assertTrue(shim.read_text(encoding="utf-8").startswith("#!/usr/bin/env node"))
+
     def test_skill_documents_the_mock_boundary(self):
         text = (REPO / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("Never fake hardware", text)

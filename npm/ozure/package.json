@@ -1,0 +1,44 @@
+{
+  "name": "@microck/ozure",
+  "version": "0.2.0",
+  "description": "Fujifilm custom recipes over USB PTP: read, edit and install C1-C7, with 126 recipes bundled",
+  "keywords": [
+    "fujifilm",
+    "fuji",
+    "x100vi",
+    "recipes",
+    "film-simulation",
+    "ptp",
+    "camera",
+    "cli",
+    "agent-skill"
+  ],
+  "homepage": "https://github.com/AlPeFe/ozure",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlPeFe/ozure.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlPeFe/ozure/issues"
+  },
+  "license": "MIT",
+  "author": "Alex P\u00e9rez Fern\u00e1ndez",
+  "bin": {
+    "ozure": "bin/ozure.js"
+  },
+  "files": [
+    "bin/ozure.js",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "optionalDependencies": {
+    "@microck/ozure-win32-x64": "0.2.0",
+    "@microck/ozure-win32-arm64": "0.2.0",
+    "@microck/ozure-darwin-arm64": "0.2.0",
+    "@microck/ozure-darwin-x64": "0.2.0",
+    "@microck/ozure-linux-x64": "0.2.0",
+    "@microck/ozure-linux-arm64": "0.2.0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@microck/ozure-darwin-arm64",
+  "version": "0.2.0",
+  "description": "ozure binary for darwin arm64",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "files": [
+    "bin"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/AlPeFe/ozure",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlPeFe/ozure.git"
+  }
+}

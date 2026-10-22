@@ -1,0 +1,20 @@
+{
+  "name": "@microck/ozure-win32-arm64",
+  "version": "0.2.0",
+  "description": "ozure binary for win32 arm64",
+  "os": [
+    "win32"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "files": [
+    "bin"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/AlPeFe/ozure",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlPeFe/ozure.git"
+  }
+}

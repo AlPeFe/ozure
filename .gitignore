@@ -13,3 +13,8 @@ mock-camera.json
 
 # Brand build cache (downloaded/instanced fonts)
 .build/
+
+# npm build artefacts (built by tools/build_npm.py / CI, never committed)
+npm/*/bin/ozure
+npm/*/bin/ozure.exe
+npm/*/*.tgz

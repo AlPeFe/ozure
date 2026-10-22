@@ -41,7 +41,13 @@ ozure backup                              # all seven slots to one JSON file
 ## Install
 
 ```bash
-pipx install "ozure[usb]"     # once it is on PyPI: isolated CLI, nothing else
+npm install -g @microck/ozure   # prebuilt binary, no Python needed
+```
+
+or through Python:
+
+```bash
+pipx install "ozure[usb]"     # isolated CLI, nothing else
 uvx --from "ozure[usb]" ozure # or run it without installing
 ```
 
@@ -54,9 +60,9 @@ python3 -m pip install -e .[usb]       # or: pip install pyusb
 python3 -m ozure doctor                # is the camera visible?
 ```
 
-Prebuilt single-file binaries (no Python at all) are built with
-`tools/ozure.spec`; see [`docs/distribution.md`](docs/distribution.md) for PyPI,
-npm, Homebrew and Scoop.
+The npm package wraps a single-file binary built with `tools/ozure.spec`
+(7.3 MB, no Python at all); see [`docs/distribution.md`](docs/distribution.md)
+for PyPI, npm, Homebrew and Scoop.
 
 On the camera, pick **USB RAW CONV./BACKUP RESTORE**. Windows needs WinUSB on
 the *USB PTP Camera* interface (Zadig); Linux may need a udev rule.

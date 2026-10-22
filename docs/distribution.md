@@ -31,9 +31,45 @@ git tag v0.2.0 && git push origin v0.2.0
 `tools/publish-pypi.yml` is the workflow (copy it to `.github/workflows/`, it
 needs the `workflow` scope on the token).
 
-## 2. npm
+## 2. npm (wired up)
 
-npm cannot install a Python package, so there are two honest options:
+```bash
+npm install -g @microck/ozure
+```
+
+That is a thin launcher plus one package per platform, the esbuild pattern:
+
+```
+npm/ozure                 @microck/ozure          bin/ozure.js (launcher)
+npm/ozure-win32-x64       @microck/ozure-win32-x64   bin/ozure.exe
+npm/ozure-darwin-arm64    ...                        (built by CI)
+npm/ozure-linux-x64       ...
+```
+
+`tools/build_npm.py` stamps the scope/version from `pyproject.toml`, builds the
+binary with PyInstaller, copies it into the platform package and can `npm pack`
+them. Verified locally with `npm install -g --prefix <dir> <tarballs>`: the
+launcher finds its binary and `ozure catalogs` works with no Python present.
+
+Publishing (needs `npm login` or a `NPM_TOKEN` with publish rights):
+
+```bash
+python tools/build_npm.py --pack
+npm publish npm/ozure-win32-x64 --access public
+npm publish npm/ozure --access public
+```
+
+Platform packages must be published **before** the launcher, so its
+`optionalDependencies` resolve. `tools/publish-pypi.yml` has an `npm` job that
+does this from the Release artifacts.
+
+The launcher falls back to `python -m ozure` when the platform binary is missing,
+and prints the install options when neither exists.
+
+### The alternatives, for the record
+
+npm cannot install a Python package, so before choosing the launcher there were
+two honest options:
 
 **a) Wrapper that calls the Python CLI (simple, fragile).** Publish a package
 whose `bin` is a Node shim:
