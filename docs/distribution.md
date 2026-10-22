@@ -34,14 +34,14 @@ needs the `workflow` scope on the token).
 ## 2. npm (wired up)
 
 ```bash
-npm install -g @microck/ozure
+npm install -g ozure
 ```
 
 That is a thin launcher plus one package per platform, the esbuild pattern:
 
 ```
-npm/ozure                 @microck/ozure          bin/ozure.js (launcher)
-npm/ozure-win32-x64       @microck/ozure-win32-x64   bin/ozure.exe
+npm/ozure                 ozure                    bin/ozure.js (launcher)
+npm/ozure-win32-x64       ozure-win32-x64          bin/ozure.exe
 npm/ozure-darwin-arm64    ...                        (built by CI)
 npm/ozure-linux-x64       ...
 ```
@@ -58,6 +58,11 @@ python tools/build_npm.py --pack
 npm publish npm/ozure-win32-x64 --access public
 npm publish npm/ozure --access public
 ```
+
+The scope is optional: `ozure` is free on npm, so the default is unscoped. If
+you prefer your namespace, `python tools/build_npm.py --scope alpefe` produces
+`@alpefe/ozure` and `@alpefe/ozure-<platform>` instead (both were free when this
+was written).
 
 Platform packages must be published **before** the launcher, so its
 `optionalDependencies` resolve. `tools/publish-pypi.yml` has an `npm` job that

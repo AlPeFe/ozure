@@ -6,7 +6,7 @@ Armitage, …) and keeps the same safety rails as the Python package: dry run by
 default, backup before writing, read-back verification.
 
 ```bash
-npm install -g @microck/ozure
+npm install -g ozure
 
 ozure connect              # find the camera, list the seven slots
 ozure list                 # what is loaded right now
@@ -22,7 +22,7 @@ the PTP interface (Zadig, vendor id `04CB`); Linux may need a udev rule.
 No camera? `ozure connect --mock` runs against a simulated body.
 
 The npm package is a thin launcher: it runs the prebuilt binary for your
-platform (`@microck/ozure-<platform>-<arch>`). If that binary is missing and you
+platform (`ozure-<platform>-<arch>`). If that binary is missing and you
 already have the Python package, it falls back to `python -m ozure`.
 
 Docs, schema, protocol notes and the agent skill:

@@ -41,7 +41,7 @@ ozure backup                              # all seven slots to one JSON file
 ## Install
 
 ```bash
-npm install -g @microck/ozure   # prebuilt binary, no Python needed
+npm install -g ozure           # prebuilt binary, no Python needed
 ```
 
 or through Python:

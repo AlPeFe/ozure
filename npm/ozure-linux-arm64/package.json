@@ -1,5 +1,5 @@
 {
-  "name": "@microck/ozure-linux-arm64",
+  "name": "ozure-linux-arm64",
   "version": "0.2.0",
   "description": "ozure binary for linux arm64",
   "os": [

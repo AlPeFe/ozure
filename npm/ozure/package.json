@@ -1,5 +1,5 @@
 {
-  "name": "@microck/ozure",
+  "name": "ozure",
   "version": "0.2.0",
   "description": "Fujifilm custom recipes over USB PTP: read, edit and install C1-C7, with 126 recipes bundled",
   "keywords": [
@@ -34,11 +34,11 @@
     "node": ">=16"
   },
   "optionalDependencies": {
-    "@microck/ozure-win32-x64": "0.2.0",
-    "@microck/ozure-win32-arm64": "0.2.0",
-    "@microck/ozure-darwin-arm64": "0.2.0",
-    "@microck/ozure-darwin-x64": "0.2.0",
-    "@microck/ozure-linux-x64": "0.2.0",
-    "@microck/ozure-linux-arm64": "0.2.0"
+    "ozure-win32-x64": "0.2.0",
+    "ozure-win32-arm64": "0.2.0",
+    "ozure-darwin-arm64": "0.2.0",
+    "ozure-darwin-x64": "0.2.0",
+    "ozure-linux-x64": "0.2.0",
+    "ozure-linux-arm64": "0.2.0"
   }
 }

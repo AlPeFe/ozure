@@ -9,8 +9,9 @@ const path = require('node:path');
 
 const PLATFORM = `${process.platform}-${process.arch}`;
 const BINARY = process.platform === 'win32' ? 'ozure.exe' : 'ozure';
-const PLATFORM_PACKAGE = process.env.OZURE_NPM_PACKAGE ||
-  `@microck/ozure-${PLATFORM}`;
+// Stamped by tools/build_npm.py: the launcher package name, scoped or not.
+const PACKAGE_NAME = "ozure";
+const PLATFORM_PACKAGE = process.env.OZURE_NPM_PACKAGE || `${PACKAGE_NAME}-${PLATFORM}`;
 const args = process.argv.slice(2);
 
 function bundledBinary() {
@@ -61,7 +62,7 @@ console.error(
   [
     `ozure: no binary for ${PLATFORM} and no local Python install.`,
     '',
-    '  npm:      npm install -g @microck/ozure   (binaries ship per platform)',
+    '  npm:      npm install -g ozure   (binaries ship per platform)',
     '  python:   pipx install "ozure[usb]"',
     '',
     'On macOS/Linux the prebuilt binary comes from the GitHub Releases page:',

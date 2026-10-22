@@ -2,14 +2,14 @@
 
 Layout (the esbuild pattern: one tiny JS launcher + one package per platform):
 
-    npm/ozure                    @microck/ozure            (bin shim)
+    npm/ozure                    ozure                     (bin shim)
     npm/ozure-win32-x64          .../ozure-win32-x64       (ozure.exe)
     npm/ozure-darwin-arm64       ...                       (filled by CI)
     ...
 
     python tools/build_npm.py                 # build the local platform binary
     python tools/build_npm.py --pack          # + npm pack every ready package
-    python tools/build_npm.py --scope alpefe  # different npm scope
+    python tools/build_npm.py --scope alpefe  # publish as @alpefe/ozure instead
 
 Publishing (needs `npm login`):
 
@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import json
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -63,13 +64,15 @@ def local_platform() -> tuple[str, str]:
 
 def stamp(scope: str, ver: str) -> None:
     """Rewrite the launcher manifest and create/stamp the platform ones."""
+
+    def full(name: str) -> str:
+        return f"@{scope}/{name}" if scope else name
+
     launcher = NPM / "ozure" / "package.json"
     data = json.loads(launcher.read_text(encoding="utf-8"))
-    data["name"] = f"@{scope}/ozure"
+    data["name"] = full("ozure")
     data["version"] = ver
-    data["optionalDependencies"] = {
-        f"@{scope}/{name}": ver for name in PLATFORMS.values()
-    }
+    data["optionalDependencies"] = {full(name): ver for name in PLATFORMS.values()}
     launcher.write_text(json.dumps(data, indent=2) + chr(10), encoding="utf-8")
 
     for name in PLATFORMS.values():
@@ -83,7 +86,7 @@ def stamp(scope: str, ver: str) -> None:
         )
         platform_data.update(
             {
-                "name": f"@{scope}/{name}",
+                "name": full(name),
                 "version": ver,
                 "description": f"ozure binary for {system} {arch}",
                 "os": [system],
@@ -100,7 +103,12 @@ def stamp(scope: str, ver: str) -> None:
         manifest.write_text(json.dumps(platform_data, indent=2) + chr(10), encoding="utf-8")
 
     shim = NPM / "ozure" / "bin" / "ozure.js"
-    source = shim.read_text(encoding="utf-8").replace("@microck/", f"@{scope}/")
+    source = shim.read_text(encoding="utf-8")
+    source = re.sub(
+        r'const PACKAGE_NAME = "[^"]*";',
+        f'const PACKAGE_NAME = "{full("ozure")}";',
+        source,
+    )
     shim.write_text(source, encoding="utf-8")
 
 
@@ -122,14 +130,15 @@ def build_binary() -> Path:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--scope", default="microck", help="npm scope, without the @")
+    parser.add_argument("--scope", default="", help="npm scope, without the @ (default: none)")
     parser.add_argument("--pack", action="store_true", help="npm pack ready packages")
     parser.add_argument("--skip-build", action="store_true", help="reuse dist/ozure*")
     args = parser.parse_args()
 
     ver = version()
     stamp(args.scope, ver)
-    print(f"stamped @{args.scope}/ozure {ver}")
+    prefix = f"@{args.scope}/" if args.scope else ""
+    print(f"stamped {prefix}ozure {ver}")
 
     system, machine = local_platform()
     name = PLATFORMS.get((system, machine))

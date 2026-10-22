@@ -535,9 +535,10 @@ class SkillDocTests(unittest.TestCase):
                 break
         self.assertEqual(manifest["version"], version)
         self.assertEqual(manifest["bin"], {"ozure": "bin/ozure.js"})
+        self.assertIn(manifest["name"], {"ozure", "@alpefe/ozure"})
         for name, wanted in manifest["optionalDependencies"].items():
             self.assertEqual(wanted, version, name)
-            self.assertTrue(name.startswith("@"))
+            self.assertRegex(name, r"-(win32|darwin|linux)-(x64|arm64)$")
 
     def test_npm_launcher_is_executable_and_has_a_shebang(self):
         shim = REPO / "npm" / "ozure" / "bin" / "ozure.js"
