@@ -26,6 +26,7 @@ import json
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -65,6 +66,34 @@ def staged_list(npm: str) -> list[dict]:
     return [item for item in data if isinstance(item, dict)]
 
 
+def approve(npm: str, *, dry_run: bool) -> int:
+    """Promote staged versions, smallest blast radius first: binaries, then the
+    launcher that points at them."""
+    staged = staged_list(npm)
+    if not staged:
+        print("nothing staged: run tools/publish_npm.py --stage first")
+        return 1
+    # binaries first (they carry os/cpu), the launcher last: it points at them
+    order = sorted(
+        staged,
+        key=lambda item: (item.get("packageName") or "").endswith("/ozure"),
+    )
+    for item in order:
+        stage_id = item.get("stageId") or item.get("stage_id") or item.get("id")
+        name = item.get("packageName") or item.get("name")
+        version = item.get("version")
+        if not stage_id:
+            continue
+        print(f"approve {name}@{version}  ({stage_id})")
+        if dry_run:
+            continue
+        result = subprocess.run([npm, "stage", "approve", stage_id], check=False)
+        if result.returncode != 0:
+            print(f"approval failed for {name}", file=sys.stderr)
+            return result.returncode
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dry-run", action="store_true", help="print the commands only")
@@ -77,6 +106,11 @@ def main() -> int:
         "--stage",
         action="store_true",
         help="use staged publishing from the start (npm stage publish)",
+    )
+    parser.add_argument(
+        "--approve",
+        action="store_true",
+        help="approve everything that is staged (needs 2FA: run it in your terminal)",
     )
     args = parser.parse_args()
 
@@ -91,6 +125,9 @@ def main() -> int:
     if not whoami:
         print("not logged in: run `npm login` first", file=sys.stderr)
         return 1
+
+    if args.approve:
+        return approve(npm, dry_run=args.dry_run)
 
     launcher = NPM / "ozure"
     launcher_name = manifest(launcher)["name"]
@@ -128,6 +165,14 @@ def main() -> int:
         if not args.stage and any(hint in output.lower() for hint in STAGE_HINT):
             print(NL + "registry wants a staged publish; retrying with `npm stage publish`...")
             code, output = run_publish(directory, npm, args.otp, stage=True)
+        # The staging endpoint answers 403 "request timeout" now and then; it is
+        # a transient registry hiccup, not a permission problem.
+        attempts = 0
+        while code != 0 and "request timeout" in output.lower() and attempts < 3:
+            attempts += 1
+            print(NL + f"registry timeout while staging; retry {attempts}/3 in a few seconds...")
+            time.sleep(5)
+            code, output = run_publish(directory, npm, args.otp, stage=True)
         if code != 0:
             print(f"failed while publishing {data['name']}", file=sys.stderr)
             return code
@@ -138,7 +183,7 @@ def main() -> int:
         print("a maintainer promotes each one, with 2FA:")
         found = False
         for item in staged_list(npm):
-            name = item.get("name") or item.get("package")
+            name = item.get("packageName") or item.get("name")
             version = item.get("version")
             stage_id = item.get("stageId") or item.get("stage_id") or item.get("id")
             if name and stage_id:

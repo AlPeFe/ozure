@@ -58,8 +58,23 @@ python tools/build_npm.py --scope alpefe --pack
 python tools/publish_npm.py            # platforms first, launcher last
 ```
 
-`publish_npm.py` also takes `--dry-run` and skips packages whose binary has not
-been built yet.
+`publish_npm.py` also takes `--dry-run`, skips packages whose binary has not
+been built yet, and `--stage` / `--approve` for the staged flow.
+
+### Staged publishing, in practice
+
+Newer npm accounts get **stage-only** credentials: `npm publish` answers
+`EOTP`, and the two-step flow is the only way in.
+
+1. `python tools/publish_npm.py --stage` — writes pending versions. The staging
+   endpoint sometimes answers `403 ... request timeout after 30000ms`; it is a
+   registry hiccup, retry (the script does, three times).
+2. `npm stage list` — check `status` is `staged` (a just-created entry can say
+   `validating` for a few seconds; approving too early gives a confusing 404).
+3. `python tools/publish_npm.py --approve` — promotes the binaries first and the
+   launcher last. **This is the step that needs 2FA**, so it only works from an
+   interactive terminal: npm opens the browser and the passkey confirms it.
+4. `npm view @alpefe/ozure version` once the registry settles.
 
 **2FA**: if the npm account requires a one-time password for publishing, npm
 prints `EOTP` and opens an auth URL. Either type the code when prompted, or
