@@ -6,4 +6,4 @@ block, same wire conversions. Keeping the two in sync matters more than
 sharing code, since the core is Rust and this skill runs anywhere Python runs.
 """
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"

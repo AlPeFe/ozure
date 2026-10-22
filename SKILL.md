@@ -6,7 +6,7 @@ metadata:
   requires:
     bins: ["python3"]
     pip: ["pyusb"]
-  version: 0.2.1
+  version: 0.2.2
 ---
 
 # ozure — Fujifilm recipes, from the catalog to the camera
