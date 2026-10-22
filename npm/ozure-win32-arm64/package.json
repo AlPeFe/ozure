@@ -1,5 +1,5 @@
 {
-  "name": "ozure-win32-arm64",
+  "name": "@alpefe/ozure-win32-arm64",
   "version": "0.2.0",
   "description": "ozure binary for win32 arm64",
   "os": [

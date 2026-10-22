@@ -1,5 +1,5 @@
 {
-  "name": "ozure-linux-x64",
+  "name": "@alpefe/ozure-linux-x64",
   "version": "0.2.0",
   "description": "ozure binary for linux x64",
   "os": [

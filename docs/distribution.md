@@ -51,13 +51,27 @@ binary with PyInstaller, copies it into the platform package and can `npm pack`
 them. Verified locally with `npm install -g --prefix <dir> <tarballs>`: the
 launcher finds its binary and `ozure catalogs` works with no Python present.
 
-Publishing (needs `npm login` or a `NPM_TOKEN` with publish rights):
+Publishing (logged in as `alpefe`, the packages go out scoped):
 
 ```bash
-python tools/build_npm.py --pack
-npm publish npm/ozure-win32-x64 --access public
-npm publish npm/ozure --access public
+python tools/build_npm.py --scope alpefe --pack
+python tools/publish_npm.py            # platforms first, launcher last
 ```
+
+`publish_npm.py` also takes `--dry-run` and skips packages whose binary has not
+been built yet.
+
+**2FA**: if the npm account requires a one-time password for publishing, npm
+prints `EOTP` and opens an auth URL. Either type the code when prompted, or
+create an **Automation** token (Account → Access Tokens → Automation) and put it
+in `~/.npmrc`:
+
+```
+//registry.npmjs.org/:_authToken=npm_XXXXXXXX
+```
+
+Automation tokens bypass 2FA — that is also what the `NPM_TOKEN` secret in
+`tools/publish-pypi.yml` must be.
 
 The scope is optional: `ozure` is free on npm, so the default is unscoped. If
 you prefer your namespace, `python tools/build_npm.py --scope alpefe` produces
