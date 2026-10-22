@@ -56,21 +56,53 @@ pipx install "ozure[usb]"     # isolated CLI, nothing else
 uvx --from "ozure[usb]" ozure # or run it without installing
 ```
 
-From a checkout, while it is still private:
+From a checkout:
 
 ```bash
 git clone https://github.com/AlPeFe/ozure
 cd ozure
-python3 -m pip install -e .[usb]       # or: pip install pyusb
+python3 -m pip install -e .[usb]       # or: pip install pyusb libusb-package
 python3 -m ozure doctor                # is the camera visible?
 ```
 
 The npm package wraps a single-file binary built with `tools/ozure.spec`
-(7.3 MB, no Python at all); see [`docs/distribution.md`](docs/distribution.md)
+(10.1 MB, no Python at all); see [`docs/distribution.md`](docs/distribution.md)
 for PyPI, npm, Homebrew and Scoop.
 
-On the camera, pick **USB RAW CONV./BACKUP RESTORE**. Windows needs WinUSB on
-the *USB PTP Camera* interface (Zadig); Linux may need a udev rule.
+### Windows: one-time driver step (the only real blocker)
+
+On the camera, pick **USB RAW CONV./BACKUP RESTORE**. Windows then hands the PTP
+interface to its own WPD/MTP stack, and libusb — what ozure uses to speak raw
+PTP — **cannot claim an interface another driver owns**. The symptom is specific:
+
+```
+ozure doctor      # sees the camera
+ozure connect     # cannot claim the PTP interface: Access denied (insufficient permissions)
+```
+
+`Access denied` is not a missing camera. Bind that interface to **WinUSB** once
+per machine with [Zadig](https://zadig.akeo.ie/):
+
+1. Run Zadig **as administrator** → *Options → List All Devices*.
+2. Pick the camera: vendor **`04CB`**, product **`0305`** (*USB PTP Camera*, *MTP*
+   or *Unknown Device*).
+3. Choose **WinUSB** on the right → **Replace Driver**. Do **not** replug.
+
+Verify — PowerShell must print `WINUSB`:
+
+```powershell
+Get-PnpDevice -PresentOnly | Where-Object { $_.InstanceId -like '*VID_04CB*' } | ForEach-Object {
+  $svc = (Get-PnpDeviceProperty -InstanceId $_.InstanceId -KeyName 'DEVPKEY_Device_Service').Data
+  "$($_.Status) | $svc" }
+```
+
+Zadig is needed precisely because ozure is a *custom low-level USB client*: the
+normal "browse photos" PTP path is a different driver and cannot be shared.
+Trade-off: while the interface is on WinUSB, Explorer/Photos and Fujifilm's
+tethering tools stop seeing the camera in PTP mode. Revert any time with
+*Device Manager → the camera → Update driver → Search automatically*.
+
+macOS needs nothing; Linux may need a udev rule.
 
 No camera? Everything works with `--mock` against a simulated body:
 
