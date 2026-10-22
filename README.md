@@ -104,6 +104,7 @@ a recipe lives. Your own catalog wins on name collisions.
 | [`docs/troubleshooting.md`](docs/troubleshooting.md) | driver, permissions, firmware quirks |
 | [`tools/ci-workflow.yml`](tools/ci-workflow.yml) | GitHub Actions CI (copy to `.github/workflows/`) |
 | [`assets/palette.md`](assets/palette.md) | the palette, generated with the brand |
+| [`docs/promo.md`](docs/promo.md) | 36 s promo video, poster and post copy |
 
 ## Brand
 
@@ -122,6 +123,7 @@ block — and the *o* of **ozure** shares the creature's pink. Everything is
 ```bash
 python3 tools/build_brand.py    # logo, icon and wordmark, SVG + PNG
 python3 tools/build_demo_gif.py # assets/demo.gif, from real CLI runs
+python3 tools/build_promo.py    # assets/promo.mp4 (36 s, 1280x720)
 ```
 
 | | |
