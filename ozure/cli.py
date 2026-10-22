@@ -146,7 +146,7 @@ def camera(args: argparse.Namespace) -> Iterator[tuple[FujiPtp, Any]]:
         transport = create_transport(path, delay=args.mock_delay)
     else:
         transport = UsbTransport.open(
-            timeout_ms=args.timeout * 1000,
+            timeout_ms=int(args.timeout * 1000),
             wait_seconds=args.wait,
             on_wait=lambda remaining: ui.step(
                 f"waiting for a Fujifilm camera... ({remaining:.0f}s left)"

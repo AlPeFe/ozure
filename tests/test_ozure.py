@@ -21,6 +21,7 @@ from ozure.errors import InvalidRecipe, ProtocolError
 from ozure.fuji import FujiPtp
 from ozure.mockcam import MockCameraTransport, props_from_recipe, state_from_recipes
 from ozure.recipe import Recipe, dial, ptp_name, ptp_name_bytes, recipe_from_props
+from ozure.transport import UsbTransport
 
 REPO = Path(__file__).resolve().parent.parent
 
@@ -99,6 +100,15 @@ class WireFormatTests(unittest.TestCase):
             Recipe.from_dict({"noise_reduction": 9})
         with self.assertRaises(InvalidRecipe):
             Recipe.from_dict({"film_simulation": "kodachrome"})
+
+
+class TransportTests(unittest.TestCase):
+    def test_timeout_is_an_int_even_when_seconds_arrive_as_float(self):
+        # libusb hands the timeout to ctypes, which refuses floats; the CLI
+        # passes `args.timeout * 1000`.
+        transport = UsbTransport(timeout_ms=5.0 * 1000)
+        self.assertIsInstance(transport.timeout_ms, int)
+        self.assertEqual(transport.timeout_ms, 5000)
 
 
 class CameraTests(unittest.TestCase):

@@ -107,8 +107,9 @@ def _find(**kwargs):
 class UsbTransport:
     """Fujifilm PTP camera over USB bulk transfers."""
 
-    def __init__(self, timeout_ms: int = DEFAULT_TIMEOUT_MS):
-        self.timeout_ms = timeout_ms
+    def __init__(self, timeout_ms: int | float = DEFAULT_TIMEOUT_MS):
+        # libusb passes this straight to ctypes, which refuses floats.
+        self.timeout_ms = int(timeout_ms)
         self.device = None
         self.interface_number = 0
         self.ep_in = None
@@ -167,7 +168,7 @@ class UsbTransport:
     @classmethod
     def open(
         cls,
-        timeout_ms: int = DEFAULT_TIMEOUT_MS,
+        timeout_ms: int | float = DEFAULT_TIMEOUT_MS,
         wait_seconds: float = 0.0,
         on_wait: Callable[[float], None] | None = None,
     ) -> UsbTransport:
@@ -261,6 +262,8 @@ class UsbTransport:
             self.ep_out.write(data, self.timeout_ms)
         except OSError as exc:
             raise TransportFailure(f"USB write failed: {exc}") from exc
+        except Exception as exc:
+            raise TransportFailure(f"USB write failed ({type(exc).__name__}): {exc}") from exc
 
     def receive(self) -> bytes:
         header = self._read(12)
@@ -277,6 +280,8 @@ class UsbTransport:
             chunk = self.ep_in.read(size, self.timeout_ms)
         except OSError as exc:
             raise TransportFailure(f"USB read failed: {exc}") from exc
+        except Exception as exc:
+            raise TransportFailure(f"USB read failed ({type(exc).__name__}): {exc}") from exc
         data = bytes(chunk)
         if not data:
             raise TransportFailure("camera closed the USB pipe")
