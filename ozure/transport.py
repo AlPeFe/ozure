@@ -62,6 +62,35 @@ def _backend():
     return backend
 
 
+def backend_info() -> dict[str, Any]:
+    """Which libusb backend, if any, is usable.
+
+    This is what separates "no libusb at all" (fix: install libusb-package) from
+    "libusb is fine but Windows will not hand over the interface" (fix: WinUSB
+    via Zadig). They look identical from `usb.core.find`.
+    """
+    try:
+        import usb.backend.libusb1 as libusb1
+    except ImportError:
+        return {"available": False, "source": "missing", "detail": "pyusb is not installed"}
+    backend = libusb1.get_backend()
+    if backend is not None:
+        return {"available": True, "source": "system", "detail": str(backend)}
+    try:
+        import libusb_package
+
+        backend = libusb_package.get_libusb1_backend()
+    except Exception:
+        backend = None
+    if backend is not None:
+        return {"available": True, "source": "libusb-package", "detail": str(backend)}
+    return {
+        "available": False,
+        "source": "none",
+        "detail": "pip install libusb-package",
+    }
+
+
 def _find(**kwargs):
     usb = _load_usb()
     backend = _backend()

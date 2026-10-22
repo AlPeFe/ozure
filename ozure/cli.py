@@ -43,7 +43,7 @@ from .fuji import FujiPtp
 from .mockcam import MockCameraTransport, create_transport, save_state, state_from_recipes
 from .paths import catalogs_root
 from .recipe import DR_PRIORITIES, MONO_FILM_SIMULATIONS, Recipe, parse_slot, slot_name
-from .transport import UsbTransport
+from .transport import UsbTransport, backend_info
 
 JSON_SCHEMA_VERSION = 1
 
@@ -229,8 +229,10 @@ def cmd_doctor(args: argparse.Namespace, out: Output) -> None:
         except Exception as exc:
             devices = [{"problem": str(exc)}]
 
+    backend = backend_info()
     payload = {
         "version": __version__,
+        "usb_backend": backend,
         "python": platform.python_version(),
         "platform": platform.platform(),
         "pyusb": usb_ok,
@@ -247,6 +249,7 @@ def cmd_doctor(args: argparse.Namespace, out: Output) -> None:
         print(ui.paint(f"ozure {__version__}", ui.BOLD))
         print(f"  python      {payload['python']} ({payload['platform']})")
         print(f"  pyusb       {'ok' if usb_ok else ui.paint('missing', ui.RED)}")
+        print(f"  libusb      {'ok (' + backend['source'] + ')' if backend['available'] else ui.paint(backend['detail'], ui.RED)}")
         print(f"  catalog     {len(catalog)} recipes in {catalog_dir}")
         if catalog_error:
             print(ui.paint(f"  catalog err {catalog_error}", ui.RED))
@@ -266,10 +269,18 @@ def cmd_doctor(args: argparse.Namespace, out: Output) -> None:
                     print(f"    - {name} [{identifiers}] {state}")
         else:
             print("  usb         no Fujifilm device visible")
-        if not devices:
+        if not devices and backend["available"]:
             print(
                 ui.paint(
                     "  next        plug the camera in, choose USB RAW CONV./BACKUP RESTORE",
+                    ui.GREY,
+                )
+            )
+        if devices and any(device.get("problem") for device in devices):
+            print(
+                ui.paint(
+                    "  next        if it fails to connect: Windows needs WinUSB on the camera "
+                    "(Zadig, 04CB); Linux needs a udev rule",
                     ui.GREY,
                 )
             )

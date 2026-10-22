@@ -1,6 +1,6 @@
 {
   "name": "@alpefe/ozure",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Fujifilm custom recipes over USB PTP: read, edit and install C1-C7, with 126 recipes bundled",
   "keywords": [
     "fujifilm",
@@ -34,11 +34,11 @@
     "node": ">=16"
   },
   "optionalDependencies": {
-    "@alpefe/ozure-win32-x64": "0.2.0",
-    "@alpefe/ozure-win32-arm64": "0.2.0",
-    "@alpefe/ozure-darwin-arm64": "0.2.0",
-    "@alpefe/ozure-darwin-x64": "0.2.0",
-    "@alpefe/ozure-linux-x64": "0.2.0",
-    "@alpefe/ozure-linux-arm64": "0.2.0"
+    "@alpefe/ozure-win32-x64": "0.2.1",
+    "@alpefe/ozure-win32-arm64": "0.2.1",
+    "@alpefe/ozure-darwin-arm64": "0.2.1",
+    "@alpefe/ozure-darwin-x64": "0.2.1",
+    "@alpefe/ozure-linux-x64": "0.2.1",
+    "@alpefe/ozure-linux-arm64": "0.2.1"
   }
 }

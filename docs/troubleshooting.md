@@ -12,13 +12,28 @@ The CLI only sees a camera that is in PTP mode.
 3. Some bodies need to be awake and out of playback mode.
 4. Try another cable/port: some USB-C cables are charge-only.
 
+## Two very different "no camera" signals
+
+`ozure doctor` separates them, and the fix is different:
+
+| doctor says | meaning | fix |
+| --- | --- | --- |
+| `pyusb ok`, `libusb missing` | no USB backend at all | `pip install libusb-package` (the binary and the `[usb]` extra already include it) |
+| `libusb ok`, `usb no Fujifilm device visible` | backend fine, camera not in PTP mode or unplugged | set **USB RAW CONV./BACKUP RESTORE**, replug |
+| device listed, `cannot claim the PTP interface: Access denied` | Windows in-box driver owns the interface | WinUSB via Zadig on the camera's `04CB` interface |
+
 ## `transport` (exit 4)
 
 The device is there but the interface could not be claimed.
 
-* **Windows**: the PTP interface needs the WinUSB driver. In Zadig, enable
-  *List All Devices*, pick **USB PTP Camera** (vendor id must start with `04CB`)
-  and install WinUSB.
+* **Windows**: the PTP interface needs the WinUSB driver, because libusb cannot
+  take an interface the in-box driver owns. In [Zadig](https://zadig.akeo.ie/):
+  *Options → List All Devices*, pick the camera (vendor id `04CB`, product often
+  `0305`, shown as *USB PTP Camera* or *Unknown Device*), choose **WinUSB** and
+  click *Replace Driver*. Replug, then `ozure doctor`.
+  This is a one-time, per-machine change and it does disable Fujifilm's own
+  tethering tools for that camera; revert it in *Device Manager → Update driver
+  → Search automatically* if you need them back.
 * **Linux**: add a udev rule instead of running as root:
 
   ```bash

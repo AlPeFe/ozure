@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ozure"
-version = "0.2.0"
+version = "0.2.1"
 description = "Read, edit and install Fujifilm custom recipes over USB PTP"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -24,7 +24,7 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-usb = ["pyusb>=1.2"]
+usb = ["pyusb>=1.2", "libusb-package>=1.0.26.1"]
 
 [project.scripts]
 ozure = "ozure.cli:main"
