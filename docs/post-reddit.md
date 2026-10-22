@@ -1,11 +1,45 @@
 # Reddit posts
 
-Two variants: one for the photography subs (r/fujifilm, r/x100v, r/fujifilmx),
-one shorter for the CLI/agent subs (r/commandline, r/opensource, r/LocalLLaMA).
-Disclose authorship, no marketing adjectives, and lead with the limitation — that
-is what survives on Reddit.
+Primary post: short, for the agent/LLM subs (r/ClaudeAI, r/codex, r/AI_Agents,
+r/LocalLLaMA, r/commandline). The longer photography version is kept below for
+r/fujifilm, r/x100v and r/fujifilmx.
 
 ---
+
+## Short · agent / LLM subs
+
+**Title:** `A CLI + skill so Claude Code / Codex can read and edit your Fujifilm recipes over USB`
+
+**Body:**
+
+I built **ozure**: a CLI that reads and writes the C1–C7 recipe slots over USB PTP
+— plus a `SKILL.md`, so an agent can drive it from plain language.
+
+It is a decent fit for a harness because it is predictable:
+
+- one JSON envelope per command (`{ok, command, data}`) and real exit codes
+  (3 = no camera, 5 = camera rejected, 10 = dry run)
+- writes are **dry runs unless `--yes`**: diff first, backup before, read-back
+  verification after
+- offline, no API keys; 126 recipes bundled as plain JSON
+
+```bash
+npm install -g @alpefe/ozure
+ozure connect --json
+ozure apply kodak-gold-200 --slot C6        # dry run: diff, exit 10
+ozure apply kodak-gold-200 --slot C6 --yes  # write + re-read + verify
+```
+
+Then ask: *"connect to my Fuji and put Kodak Gold 200 in C6"*. The skill tells the
+agent to show you the diff before writing.
+
+Repo (MIT, skill at the root, just point your agent at it):
+https://github.com/AlPeFe/ozure
+
+One caveat: on Windows the camera interface must be on WinUSB (Zadig) or libusb
+gets `Access denied` — steps in the README.
+
+## Long version · photography subs
 
 ## r/fujifilm · r/x100v · r/fujifilmx
 
